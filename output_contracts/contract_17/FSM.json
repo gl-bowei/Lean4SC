@@ -1,0 +1,88 @@
+{
+    "contractName": "LinkedCollectorsPass",
+    "inherited contracts": [],
+    "initialState": "Minting Active",
+    "states": [
+      {
+        "name": "Minting Active",
+        "transitions": [
+          {
+            "trigger": "PauseMinting",
+            "target": "Minting Paused",
+            "action": "pauseMinting"
+          },
+          {
+            "trigger": "MintNFT",
+            "target": "Minting Active",
+            "action": "mintTokens",
+            "condition": "supplyAvailable"
+          }
+        ]
+      },
+      {
+        "name": "Minting Paused",
+        "transitions": [
+          {
+            "trigger": "UnpauseMinting",
+            "target": "Minting Active",
+            "action": "unpauseMinting"
+          }
+        ]
+      },
+      {
+        "name": "Minting Finished",
+        "transitions": []
+      }
+    ],
+    "variables": [
+      {
+        "name": "DEVELOPER_ADDRESS",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "SAFE_ADDRESS",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000001"
+      },
+      {
+        "name": "tokenPrice",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "MAX_SUPPLY",
+        "type": "uint",
+        "initialValue": 1000
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintTokens",
+        "function": "Mints a new NFT token."
+      },
+      {
+        "name": "burnTokens",
+        "function": "Burns an existing NFT token."
+      },
+      {
+        "name": "setTokenPrice",
+        "function": "Sets the price for minting NFT tokens."
+      },
+      {
+        "name": "addAdmin",
+        "function": "Adds a new admin address."
+      },
+      {
+        "name": "withdraw",
+        "function": "Withdraws funds from the contract."
+      }
+    ],
+    "events": [
+      "TokensMinted",
+      "MintingPaused",
+      "MintingUnpaused",
+      "AdminAdded",
+      "TokenPriceSet"
+    ]
+}

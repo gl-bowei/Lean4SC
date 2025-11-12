@@ -1,0 +1,122 @@
+{
+    "contractName": "AndhraToken",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "ContractDeployment",
+                    "target": "Initialized",
+                    "action": "Initialize token properties"
+                }
+            ]
+        },
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "TransferTokens",
+                    "target": "TransferState",
+                    "action": "Perform token transfer"
+                },
+                {
+                    "trigger": "ApproveTokens",
+                    "target": "ApprovalState",
+                    "action": "Set allowance for spender"
+                },
+                {
+                    "trigger": "TransferFromTokens",
+                    "target": "TransferFromState",
+                    "action": "Transfer tokens on behalf of owner"
+                }
+            ]
+        },
+        {
+            "name": "TransferState",
+            "transitions": [
+                {
+                    "trigger": "TokensTransferred",
+                    "target": "Initialized",
+                    "action": "Update balances after transfer"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalState",
+            "transitions": [
+                {
+                    "trigger": "TokensApproved",
+                    "target": "Initialized",
+                    "action": "Set allowance for spender"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromState",
+            "transitions": [
+                {
+                    "trigger": "TransferFromExecuted",
+                    "target": "Initialized",
+                    "action": "Update balances after transfer from"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "ANDHRA"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "ANDHRA Token"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 1000000000000000000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Transfer tokens from caller to specified address."
+        },
+        {
+            "name": "approve",
+            "function": "Set an allowance for a spender."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfer tokens on behalf of another address."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Approve a spender and call a function on the spender."
+        },
+        {
+            "name": "transferAnyERC20Token",
+            "function": "Transfer ERC20 tokens accidentally sent to the contract."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

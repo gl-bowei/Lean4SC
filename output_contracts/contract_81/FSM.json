@@ -1,0 +1,108 @@
+{
+    "contractName": "DinoApeToken",
+    "inherited contracts": ["ERC20"],
+    "initialState": "TradingActive",
+    "states": [
+        {
+            "name": "TradingActive",
+            "transitions": [
+                {
+                    "trigger": "EnableTrading",
+                    "target": "SwappingEnabled",
+                    "action": "startTrading",
+                    "condition": "isOwner"
+                },
+                {
+                    "trigger": "SetLimits",
+                    "target": "LimitsInEffect",
+                    "action": "applyTransactionLimits"
+                }
+            ]
+        },
+        {
+            "name": "SwappingEnabled",
+            "transitions": [
+                {
+                    "trigger": "ManageFees",
+                    "target": "TradingActive",
+                    "action": "updateFees"
+                },
+                {
+                    "trigger": "LiquiditySwap",
+                    "target": "TradingActive",
+                    "action": "executeSwap"
+                }
+            ]
+        },
+        {
+            "name": "LimitsInEffect",
+            "transitions": [
+                {
+                    "trigger": "DisableTrading",
+                    "target": "TradingActive",
+                    "action": "stopTrading",
+                    "condition": "isOwner"
+                },
+                {
+                    "trigger": "ActivateTrading",
+                    "target": "TradingActive",
+                    "action": "activateTrading"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "marketingWallet",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "developerWallet",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "transactionLimits",
+            "type": "uint256",
+            "initialValue": 1000
+        },
+        {
+            "name": "transactionFee",
+            "type": "uint256",
+            "initialValue": 5
+        },
+        {
+            "name": "antiBotActive",
+            "type": "bool",
+            "initialValue": true
+        }
+    ],
+    "functions": [
+        {
+            "name": "startTrading",
+            "function": "Enables trading functionalities."
+        },
+        {
+            "name": "stopTrading",
+            "function": "Disables trading functionalities."
+        },
+        {
+            "name": "applyTransactionLimits",
+            "function": "Imposes transaction limits during trading."
+        },
+        {
+            "name": "updateFees",
+            "function": "Updates transaction fees based on trading status."
+        },
+        {
+            "name": "executeSwap",
+            "function": "Conducts liquidity swaps."
+        }
+    ],
+    "events": [
+        "TradingActivated",
+        "FeeUpdated",
+        "WalletUpdated"
+    ]
+}

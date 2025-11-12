@@ -1,0 +1,101 @@
+{
+    "contractName": "EFTTokenContract",
+    "inherited contracts": [],
+    "initialState": "InitialConfiguration",
+    "states": [
+      {
+        "name": "InitialConfiguration",
+        "transitions": [
+          {
+            "trigger": "OwnerSetup",
+            "target": "TradingActive",
+            "action": "setupInitialParams"
+          }
+        ]
+      },
+      {
+        "name": "TradingActive",
+        "transitions": [
+          {
+            "trigger": "ActivateTrading",
+            "target": "TradingActive",
+            "action": "enableTrading"
+          },
+          {
+            "trigger": "SetTransactionLimit",
+            "target": "TradingActive",
+            "action": "setTransactionLimits"
+          },
+          {
+            "trigger": "ExcludeFromFees",
+            "target": "TradingActive",
+            "action": "excludeAccountFromFees"
+          },
+          {
+            "trigger": "LiquidityManagement",
+            "target": "TradingActive",
+            "action": "manageLiquidity"
+          }
+        ]
+      },
+      {
+        "name": "TradingInactive",
+        "transitions": [
+          {
+            "trigger": "DeactivateTrading",
+            "target": "TradingInactive",
+            "action": "disableTrading"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "transactionLimit",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "feeDistribution",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "developmentWallet",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000001"
+      },
+      {
+        "name": "marketingWallet",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000002"
+      }
+    ],
+    "functions": [
+      {
+        "name": "setupInitialParams",
+        "function": "Sets up initial parameters by the owner."
+      },
+      {
+        "name": "enableTrading",
+        "function": "Enables trading on the token."
+      },
+      {
+        "name": "setTransactionLimits",
+        "function": "Sets the transaction limits for trading."
+      },
+      {
+        "name": "excludeAccountFromFees",
+        "function": "Excludes a specific account from transaction fees."
+      },
+      {
+        "name": "manageLiquidity",
+        "function": "Handles liquidity provision and management."
+      },
+      {
+        "name": "disableTrading",
+        "function": "Disables trading for the token."
+      }
+    ],
+    "events": ["TradingActivated", "FeeExcluded", "LiquidityManaged"]
+}

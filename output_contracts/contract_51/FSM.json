@@ -1,0 +1,125 @@
+{
+    "contractName": "FlybitToken",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "ConstructorCalled",
+                    "target": "TokenCreated",
+                    "action": "SetInitialValues"
+                }
+            ]
+        },
+        {
+            "name": "TokenCreated",
+            "transitions": [
+                {
+                    "trigger": "TransferCalled",
+                    "target": "Transferred",
+                    "action": "TransferTokens"
+                },
+                {
+                    "trigger": "ApproveCalled",
+                    "target": "Approved",
+                    "action": "ApproveSpender"
+                },
+                {
+                    "trigger": "TransferFromCalled",
+                    "target": "TransferredFrom",
+                    "action": "TransferFromAccount"
+                }
+            ]
+        },
+        {
+            "name": "Transferred",
+            "transitions": [
+                {
+                    "trigger": "TransferCalled",
+                    "target": "Transferred",
+                    "action": "TransferTokens"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "ApproveAndCallCalled",
+                    "target": "TransferCalled",
+                    "action": "ApproveAndCall"
+                }
+            ]
+        },
+        {
+            "name": "TransferredFrom",
+            "transitions": [
+                {
+                    "trigger": "TransferFromCalled",
+                    "target": "TransferredFrom",
+                    "action": "TransferFromAccount"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "FLYb"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Flybit.com"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 1000000000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "SetInitialValues",
+            "function": "Initializes the token values."
+        },
+        {
+            "name": "TransferTokens",
+            "function": "Executes the token transfer process."
+        },
+        {
+            "name": "ApproveSpender",
+            "function": "Sets allowance for a spender."
+        },
+        {
+            "name": "TransferFromAccount",
+            "function": "Transfers tokens on behalf of another account."
+        },
+        {
+            "name": "ApproveAndCall",
+            "function": "Approves a spender and calls a function in the spender contract."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Approval"
+    ]
+}

@@ -1,0 +1,108 @@
+{
+    "contractName": "CompoundStakingReward",
+    "inherited contracts": ["ReentrancyGuard", "AccessControl", "IStakeFor"],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "Deposit",
+                    "target": "Depositing",
+                    "action": "depositFor or deposit",
+                    "condition": "amount >= PRECISION_FACTOR"
+                }
+            ]
+        },
+        {
+            "name": "Depositing",
+            "transitions": [
+                {
+                    "trigger": "DepositComplete",
+                    "target": "Idle",
+                    "action": "emit Deposit event"
+                }
+            ]
+        },
+        {
+            "name": "Withdrawing",
+            "transitions": [
+                {
+                    "trigger": "Withdraw",
+                    "target": "Idle",
+                    "action": "_withdraw",
+                    "condition": "shares > 0 && shares <= userInfo[msg.sender].shares"
+                }
+            ]
+        },
+        {
+            "name": "WithdrawingAll",
+            "transitions": [
+                {
+                    "trigger": "WithdrawAll",
+                    "target": "Idle",
+                    "action": "_withdraw",
+                    "condition": "userInfo[msg.sender].shares > 0"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "totalShares",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "startBlock",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "penaltyPeriods",
+            "type": "uint256[]",
+            "initialValue": []
+        },
+        {
+            "name": "penaltyRates",
+            "type": "uint256[]",
+            "initialValue": []
+        },
+        {
+            "name": "userInfo",
+            "type": "mapping(address => UserInfo)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "depositFor",
+            "function": "Deposits on behalf of a user."
+        },
+        {
+            "name": "deposit",
+            "function": "Deposits staked tokens."
+        },
+        {
+            "name": "withdraw",
+            "function": "Withdraws staked tokens."
+        },
+        {
+            "name": "withdrawAll",
+            "function": "Withdraws all staked tokens."
+        },
+        {
+            "name": "calculateSharesValueInState",
+            "function": "Calculates the value of State Token for a user."
+        },
+        {
+            "name": "calculateSharePriceInState",
+            "function": "Calculates the price of one share."
+        },
+        {
+            "name": "getPenalty",
+            "function": "Calculates the user penalty for early withdrawal."
+        }
+    ],
+    "events": ["Deposit", "Withdraw"]
+}

@@ -1,0 +1,88 @@
+{
+    "contractName": "XinXianToken",
+    "inherited contracts": [],
+    "initialState": "FundingNotStarted",
+    "states": [
+        {
+            "name": "FundingNotStarted",
+            "transitions": [
+                {
+                    "trigger": "StartFunding",
+                    "target": "FundingInProgress",
+                    "action": "startFunding"
+                }
+            ]
+        },
+        {
+            "name": "FundingInProgress",
+            "transitions": [
+                {
+                    "trigger": "StopFunding",
+                    "target": "FundingEnded",
+                    "action": "stopFunding"
+                },
+                {
+                    "trigger": "PurchaseTokens",
+                    "target": "FundingInProgress",
+                    "action": "allocateToken"
+                }
+            ]
+        },
+        {
+            "name": "FundingEnded",
+            "transitions": [
+                {
+                    "trigger": "MigrateTokens",
+                    "target": "FundingEnded",
+                    "action": "migrate"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "ethFundDeposit",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "currentSupply",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "fundingStartBlock",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "tokenExchangeRate",
+            "type": "uint",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "startFunding",
+            "function": "Starts the funding process."
+        },
+        {
+            "name": "stopFunding",
+            "function": "Stops the funding process."
+        },
+        {
+            "name": "allocateToken",
+            "function": "Allocates tokens to users."
+        },
+        {
+            "name": "migrate",
+            "function": "Migrates tokens to a new contract."
+        }
+    ],
+    "events": [
+        "AllocateToken",
+        "IssueToken",
+        "IncreaseSupply",
+        "Migrate"
+    ]
+}

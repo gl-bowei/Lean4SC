@@ -1,0 +1,94 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "PresaleActive",
+    "states": [
+      {
+        "name": "PresaleActive",
+        "transitions": [
+          {
+            "trigger": "StartPresale",
+            "target": "PresaleActive",
+            "action": "buyTokens",
+            "condition": "presaleNotEnded"
+          },
+          {
+            "trigger": "EndPresale",
+            "target": "RefundEnabled",
+            "action": "claimDevFee"
+          }
+        ]
+      },
+      {
+        "name": "RefundEnabled",
+        "transitions": [
+          {
+            "trigger": "EnableRefunds",
+            "target": "RefundEnabled",
+            "action": "refundCaller",
+            "condition": "refundPeriodActive"
+          },
+          {
+            "trigger": "StartMoonMission",
+            "target": "MoonMissionStarted",
+            "action": "airDrop"
+          }
+        ]
+      },
+      {
+        "name": "MoonMissionStarted",
+        "transitions": [
+          {
+            "trigger": "CompleteMoonMission",
+            "target": "PresaleActive",
+            "action": "addLiquidity"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "tokensBought",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "totalSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "refundSettings",
+        "type": "bool",
+        "initialValue": false
+      }
+    ],
+    "functions": [
+      {
+        "name": "buyTokens",
+        "function": "The function to allow users to buy tokens during presale."
+      },
+      {
+        "name": "airDrop",
+        "function": "The function to distribute tokens to users."
+      },
+      {
+        "name": "claimDevFee",
+        "function": "The function for developers to claim their fees after presale."
+      },
+      {
+        "name": "refundCaller",
+        "function": "The function to process refunds to users."
+      },
+      {
+        "name": "addLiquidity",
+        "function": "The function to add liquidity to the market."
+      }
+    ],
+    "events": ["Transfer", "Approval"]
+}

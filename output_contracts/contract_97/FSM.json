@@ -1,0 +1,137 @@
+{
+    "contractName": "NFTMintingContract",
+    "inherited contracts": [],
+    "initialState": "PresalePeriod",
+    "states": [
+        {
+            "name": "PresalePeriod",
+            "transitions": [
+                {
+                    "trigger": "StartPublicSale",
+                    "target": "PublicSalePeriod",
+                    "action": "startPublicSale",
+                    "condition": "isPresaleOver"
+                },
+                {
+                    "trigger": "PauseContract",
+                    "target": "PausedState",
+                    "action": "pauseContract"
+                },
+                {
+                    "trigger": "RevealNFTs",
+                    "target": "RevealedState",
+                    "action": "revealNFTs",
+                    "condition": "isReadyForReveal"
+                }
+            ]
+        },
+        {
+            "name": "PublicSalePeriod",
+            "transitions": [
+                {
+                    "trigger": "SaleEnded",
+                    "target": "RevealedState",
+                    "action": "endSale"
+                },
+                {
+                    "trigger": "PauseContract",
+                    "target": "PausedState",
+                    "action": "pauseContract"
+                }
+            ]
+        },
+        {
+            "name": "PausedState",
+            "transitions": [
+                {
+                    "trigger": "ResumeContract",
+                    "target": "PresalePeriod",
+                    "action": "resumeContract",
+                    "condition": "isOwner"
+                },
+                {
+                    "trigger": "ResumeContract",
+                    "target": "PublicSalePeriod",
+                    "action": "resumeContract",
+                    "condition": "isOwner"
+                }
+            ]
+        },
+        {
+            "name": "RevealedState",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "maxSupply",
+            "type": "uint",
+            "initialValue": 10000
+        },
+        {
+            "name": "price",
+            "type": "uint",
+            "initialValue": 0.05
+        },
+        {
+            "name": "presaleStart",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "publicStart",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "baseURI",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "revealed",
+            "type": "bool",
+            "initialValue": false
+        },
+        {
+            "name": "paused",
+            "type": "bool",
+            "initialValue": false
+        }
+    ],
+    "functions": [
+        {
+            "name": "presaleMint",
+            "function": "The function to mint NFTs during the presale."
+        },
+        {
+            "name": "publicSaleMint",
+            "function": "The function to mint NFTs during the public sale."
+        },
+        {
+            "name": "airdrop",
+            "function": "The function to airdrop NFTs to specified addresses."
+        },
+        {
+            "name": "startPublicSale",
+            "function": "The function to transition from presale to public sale."
+        },
+        {
+            "name": "pauseContract",
+            "function": "The function to pause all sale activities."
+        },
+        {
+            "name": "resumeContract",
+            "function": "The function to resume the contract sales."
+        },
+        {
+            "name": "revealNFTs",
+            "function": "The function to reveal the NFTs after the sale."
+        }
+    ],
+    "events": [
+        "TokenMinted",
+        "SaleStarted",
+        "SalePaused"
+    ]
+}

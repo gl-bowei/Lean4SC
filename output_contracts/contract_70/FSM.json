@@ -1,0 +1,82 @@
+{
+    "contractName": "DGKtestnet",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+      {
+        "name": "Initialized",
+        "transitions": [
+          {
+            "trigger": "addSignature",
+            "target": "SignatureAdded",
+            "action": "Link signature to digital fingerprint"
+          },
+          {
+            "trigger": "removeSignature",
+            "target": "Initialized",
+            "action": "Remove signature from mapping"
+          },
+          {
+            "trigger": "getSignature",
+            "target": "Initialized",
+            "action": "Retrieve signature"
+          },
+          {
+            "trigger": "removeSdaContract",
+            "target": "Destroyed",
+            "action": "Self-destruct the contract"
+          }
+        ]
+      },
+      {
+        "name": "SignatureAdded",
+        "transitions": [
+          {
+            "trigger": "getSignature",
+            "target": "Initialized",
+            "action": "Retrieve signature"
+          }
+        ]
+      },
+      {
+        "name": "Destroyed",
+        "transitions": []
+      }
+    ],
+    "variables": [
+      {
+        "name": "owner",
+        "type": "address",
+        "initialValue": "msg.sender"
+      },
+      {
+        "name": "institution",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "fingerprintSignatureMapping",
+        "type": "mapping(bytes32 => string)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "addSignature",
+        "function": "Adds a new signature and links it to its corresponding digital fingerprint."
+      },
+      {
+        "name": "removeSignature",
+        "function": "Removes a signature from this contract."
+      },
+      {
+        "name": "getSignature",
+        "function": "Returns the corresponding signature for a specified digital fingerprint."
+      },
+      {
+        "name": "removeSdaContract",
+        "function": "Removes the entire contract from the blockchain and invalidates all signatures."
+      }
+    ],
+    "events": ["SignatureAdded"]
+}

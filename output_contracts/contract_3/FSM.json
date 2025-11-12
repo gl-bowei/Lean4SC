@@ -1,0 +1,88 @@
+{
+    "contractName": "NebliDex_AtomicSwap_ERC20",
+    "inherited contracts": [],
+    "initialState": "INVALID",
+    "states": [
+        {
+            "name": "INVALID",
+            "transitions": [
+                {
+                    "trigger": "Open",
+                    "target": "OPEN",
+                    "action": "open",
+                    "condition": "onlyInvalidSwaps(swapID)"
+                }
+            ]
+        },
+        {
+            "name": "OPEN",
+            "transitions": [
+                {
+                    "trigger": "Redeem",
+                    "target": "CLOSED",
+                    "action": "redeem",
+                    "condition": "onlyOpenSwaps(swapID) && onlyNotExpiredSwaps(swapID) && onlyWithSecretKey(swapID, secretKey)"
+                },
+                {
+                    "trigger": "Refund",
+                    "target": "EXPIRED",
+                    "action": "refund",
+                    "condition": "onlyOpenSwaps(swapID) && onlyExpiredSwaps(swapID)"
+                }
+            ]
+        },
+        {
+            "name": "CLOSED",
+            "transitions": [
+                {
+                    "trigger": "CheckSecretKey",
+                    "target": "CLOSED",
+                    "action": "checkSecretKey"
+                }
+            ]
+        },
+        {
+            "name": "EXPIRED",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "swaps",
+            "type": "mapping(bytes32 => Swap)",
+            "initialValue": {}
+        },
+        {
+            "name": "swapStates",
+            "type": "mapping(bytes32 => States)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "open",
+            "function": "Create a new swap"
+        },
+        {
+            "name": "redeem",
+            "function": "Redeem the ERC20 value"
+        },
+        {
+            "name": "refund",
+            "function": "Refund the ERC20 value"
+        },
+        {
+            "name": "check",
+            "function": "Check swap details"
+        },
+        {
+            "name": "checkSecretKey",
+            "function": "Check the secret key of a closed swap"
+        }
+    ],
+    "events": [
+        "Open",
+        "Expire",
+        "Close"
+    ]
+}

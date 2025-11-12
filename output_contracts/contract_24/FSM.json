@@ -1,0 +1,118 @@
+{
+    "contractName": "Luckies",
+    "inherited contracts": ["ERC1155", "Ownable", "Pausable", "ReentrancyGuard"],
+    "initialState": "Paused",
+    "states": [
+        {
+            "name": "Paused",
+            "transitions": [
+                {
+                    "trigger": "unpause()",
+                    "target": "Active",
+                    "action": "Unpause the contract"
+                }
+            ]
+        },
+        {
+            "name": "Active",
+            "transitions": [
+                {
+                    "trigger": "pause()",
+                    "target": "Paused",
+                    "action": "Pause the contract"
+                },
+                {
+                    "trigger": "mint(amount)",
+                    "target": "Minting",
+                    "action": "Mint tokens"
+                },
+                {
+                    "trigger": "adminMint(account, amount)",
+                    "target": "Minting",
+                    "action": "Admin mints tokens"
+                }
+            ]
+        },
+        {
+            "name": "Minting",
+            "transitions": [
+                {
+                    "trigger": "Mint complete",
+                    "target": "Active",
+                    "action": "Return to active state after minting"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Luckies"
+        },
+        {
+            "name": "tokenURI",
+            "type": "string",
+            "initialValue": "ipfs://QmecSGZ3wrZYGxGKejsW3xHEYiy12e5DMtqYTn5Dv9CH95/"
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "nonce",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "wl_timestamp_5Z",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "tokenPrice",
+            "type": "uint256",
+            "initialValue": 88000000000000000
+        },
+        {
+            "name": "tokenPrice2Z",
+            "type": "uint256",
+            "initialValue": 80000000000000000
+        },
+        {
+            "name": "tokenPrice3Z",
+            "type": "uint256",
+            "initialValue": 70000000000000000
+        },
+        {
+            "name": "tokenPrice4Z",
+            "type": "uint256",
+            "initialValue": 60000000000000000
+        },
+        {
+            "name": "tokenPrice5Z",
+            "type": "uint256",
+            "initialValue": 50000000000000000
+        }
+    ],
+    "functions": [
+        {
+            "name": "pause",
+            "function": "Pause the contract"
+        },
+        {
+            "name": "unpause",
+            "function": "Unpause the contract"
+        },
+        {
+            "name": "mint",
+            "function": "Public mint function"
+        },
+        {
+            "name": "adminMint",
+            "function": "Mint tokens to a given account by an admin"
+        }
+    ],
+    "events": ["MintEvent"]
+}

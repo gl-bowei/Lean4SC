@@ -1,0 +1,84 @@
+{
+    "contractName": "MembershipContract",
+    "inherited contracts": [],
+    "initialState": "AirdropEligibility",
+    "states": [
+      {
+        "name": "AirdropEligibility",
+        "transitions": [
+          {
+            "trigger": "CheckEligibility",
+            "target": "AirdropClaiming",
+            "action": "actionCheckEligibility",
+            "condition": "isEligible(msg.sender)"
+          }
+        ]
+      },
+      {
+        "name": "AirdropClaiming",
+        "transitions": [
+          {
+            "trigger": "ClaimAirdrop",
+            "target": "TokenPurchasing",
+            "action": "claimAirdropAction"
+          }
+        ]
+      },
+      {
+        "name": "TokenPurchasing",
+        "transitions": [
+          {
+            "trigger": "PurchaseTokens",
+            "target": "AirdropEligibility",
+            "action": "purchaseTokensAction"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "owner",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "tokenContracts",
+        "type": "address[]",
+        "initialValue": []
+      },
+      {
+        "name": "exchangeRate",
+        "type": "uint256",
+        "initialValue": 100
+      },
+      {
+        "name": "airdropAmount",
+        "type": "uint256",
+        "initialValue": 1000
+      },
+      {
+        "name": "tierThresholds",
+        "type": "mapping(uint256 => uint256)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "actionCheckEligibility",
+        "function": "Check if the user is eligible for airdrop."
+      },
+      {
+        "name": "claimAirdropAction",
+        "function": "Process airdrop claim for eligible users."
+      },
+      {
+        "name": "purchaseTokensAction",
+        "function": "Allow eligible users to purchase tokens."
+      }
+    ],
+    "events": [
+      "ClaimAirdrop",
+      "Purchase",
+      "WithdrawAll"
+    ]
+}

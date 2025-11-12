@@ -1,0 +1,101 @@
+{
+    "contractName": "TokenRedeemer",
+    "inherited contracts": ["Ownable", "ReentrancyGuard"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "SetRedemptionConfig",
+                    "target": "Configured",
+                    "action": "Configure redemption amounts"
+                }
+            ]
+        },
+        {
+            "name": "Configured",
+            "transitions": [
+                {
+                    "trigger": "RedeemSingleToken",
+                    "target": "TokenRedeemed",
+                    "action": "Redeem a specific token"
+                },
+                {
+                    "trigger": "RedeemMultipleTokens",
+                    "target": "TokensRedeemed",
+                    "action": "Redeem multiple tokens"
+                }
+            ]
+        },
+        {
+            "name": "TokenRedeemed",
+            "transitions": [
+                {
+                    "trigger": "CompleteRedemption",
+                    "target": "Initialized",
+                    "action": "Complete single token redemption"
+                }
+            ]
+        },
+        {
+            "name": "TokensRedeemed",
+            "transitions": [
+                {
+                    "trigger": "CompleteRedemption",
+                    "target": "Initialized",
+                    "action": "Complete multiple tokens redemption"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "super1155",
+            "type": "ISuper1155",
+            "initialValue": "null"
+        },
+        {
+            "name": "burnAddress",
+            "type": "address",
+            "initialValue": "null"
+        },
+        {
+            "name": "customBurn",
+            "type": "bool",
+            "initialValue": false
+        },
+        {
+            "name": "redemptionConfigs",
+            "type": "mapping(uint256 => mapping(address => RedemptionConfig))",
+            "initialValue": {}
+        },
+        {
+            "name": "redeemer",
+            "type": "mapping(address => mapping(uint256 => address))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "redeem",
+            "function": "Redeem a specific token for a token from group."
+        },
+        {
+            "name": "redeemMult",
+            "function": "Redeem multiple specific tokens."
+        },
+        {
+            "name": "_redeemToken",
+            "function": "Internal function to process token redemption."
+        },
+        {
+            "name": "setRedemptionConfig",
+            "function": "Configure redemption settings for tokens."
+        }
+    ],
+    "events": [
+        "TokenRedemption",
+        "ConfigUpdate"
+    ]
+}

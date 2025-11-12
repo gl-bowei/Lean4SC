@@ -1,0 +1,92 @@
+{
+    "contractName": "NFTMintingDistributionContract",
+    "inherited contracts": [],
+    "initialState": "Minting Preparation",
+    "states": [
+      {
+        "name": "Minting Preparation",
+        "transitions": [
+          {
+            "trigger": "StartMinting",
+            "target": "Minting Active",
+            "action": "prepareForMinting"
+          }
+        ]
+      },
+      {
+        "name": "Minting Active",
+        "transitions": [
+          {
+            "trigger": "MintToken",
+            "target": "Minting Active",
+            "action": "mintToken"
+          },
+          {
+            "trigger": "FinishMinting",
+            "target": "Distribution",
+            "action": "finalizeMinting"
+          }
+        ]
+      },
+      {
+        "name": "Distribution",
+        "transitions": [
+          {
+            "trigger": "DistributeFunds",
+            "target": "Distribution",
+            "action": "distributeFunds"
+          },
+          {
+            "trigger": "WithdrawBalance",
+            "target": "Distribution",
+            "action": "sendFunds"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "receiverAddresses",
+        "type": "address[]",
+        "initialValue": []
+      },
+      {
+        "name": "team",
+        "type": "address[]",
+        "initialValue": []
+      },
+      {
+        "name": "currentBatchMinted",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "airdrop",
+        "function": "The function for airdropping tokens to users."
+      },
+      {
+        "name": "mint",
+        "function": "The function for minting new tokens."
+      },
+      {
+        "name": "distributeFunds",
+        "function": "The function for distributing funds among team members."
+      },
+      {
+        "name": "sendFunds",
+        "function": "The function for sending funds to team members."
+      },
+      {
+        "name": "withdrawTeamMemberBalanceTo",
+        "function": "The function for withdrawing a team member's balance."
+      }
+    ],
+    "events": ["Minted"]
+}

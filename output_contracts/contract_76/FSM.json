@@ -1,0 +1,129 @@
+{
+    "contractName": "ECN",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "Set allowance for spender"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Transferred",
+                    "action": "Transfer tokens"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "Burnt",
+                    "action": "Burn tokens"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferredFrom",
+                    "action": "Transfer tokens from another account"
+                }
+            ]
+        },
+        {
+            "name": "Transferred",
+            "transitions": [
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "Set allowance for spender"
+                }
+            ]
+        },
+        {
+            "name": "Burnt",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Transferred",
+                    "action": "Transfer tokens"
+                }
+            ]
+        },
+        {
+            "name": "TransferredFrom",
+            "transitions": [
+                {
+                    "trigger": "BurnFrom",
+                    "target": "Burnt",
+                    "action": "Burn tokens from the approved account"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        }
+    ],
+    "functions": [
+        {
+            "name": "approve",
+            "function": "Set allowance for a spender."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfer tokens to a specified address."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfer tokens on behalf of another account."
+        },
+        {
+            "name": "burn",
+            "function": "Burn a specified amount of tokens."
+        },
+        {
+            "name": "burnFrom",
+            "function": "Burn tokens from a specified account."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Set allowance and call another contract."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Burn"
+    ]
+}

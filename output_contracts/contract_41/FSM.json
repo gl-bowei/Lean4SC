@@ -1,0 +1,135 @@
+{
+    "contractName": "IsdaToken",
+    "inherited contracts": ["ERC20Interface", "Owned"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "DeployContract",
+                    "target": "TokenIssued",
+                    "action": "InitializeToken",
+                    "condition": "None"
+                }
+            ]
+        },
+        {
+            "name": "TokenIssued",
+            "transitions": [
+                {
+                    "trigger": "TransferTokens",
+                    "target": "TokensTransferred",
+                    "action": "ExecuteTransfer",
+                    "condition": "SufficientBalance"
+                },
+                {
+                    "trigger": "ApproveSpender",
+                    "target": "SpenderApproved",
+                    "action": "SetAllowance",
+                    "condition": "OwnerExists"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokensTransferred",
+                    "action": "ExecuteTransferFrom",
+                    "condition": "ApprovedAndSufficientBalance"
+                },
+                {
+                    "trigger": "CheckAllowance",
+                    "target": "AllowanceChecked",
+                    "action": "ReturnAllowance",
+                    "condition": "None"
+                }
+            ]
+        },
+        {
+            "name": "TokensTransferred",
+            "transitions": [
+                {
+                    "trigger": "TransferTokens",
+                    "target": "TokensTransferred",
+                    "action": "ExecuteTransfer",
+                    "condition": "SufficientBalance"
+                }
+            ]
+        },
+        {
+            "name": "SpenderApproved",
+            "transitions": [
+                {
+                    "trigger": "ApproveSpender",
+                    "target": "SpenderApproved",
+                    "action": "SetAllowance",
+                    "condition": "OwnerExists"
+                }
+            ]
+        },
+        {
+            "name": "AllowanceChecked",
+            "transitions": [
+                {
+                    "trigger": "CheckAllowance",
+                    "target": "AllowanceChecked",
+                    "action": "ReturnAllowance",
+                    "condition": "None"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "SDT"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "IsdaToken"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 1000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "InitializeToken",
+            "function": "Sets the initial state of token parameters."
+        },
+        {
+            "name": "ExecuteTransfer",
+            "function": "Handles the token transfer from one account to another."
+        },
+        {
+            "name": "SetAllowance",
+            "function": "Sets the allowance for the spender to spend tokens on behalf of the owner."
+        },
+        {
+            "name": "ExecuteTransferFrom",
+            "function": "Handles the transfer of tokens from one account to another based on approved allowance."
+        },
+        {
+            "name": "ReturnAllowance",
+            "function": "Returns the amount of tokens that an owner has allowed a spender to spend."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

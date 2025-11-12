@@ -1,0 +1,156 @@
+{
+    "contractName": "ZRO4",
+    "inherited contracts": ["ERC20Interface", "Ownable"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "TransferLockedBalance",
+                    "target": "LockedBalanceTransferred",
+                    "action": "transferLockedBalance",
+                    "condition": "require(balances[msg.sender] >= _value && _value > 0)"
+                },
+                {
+                    "trigger": "UnlockBalance",
+                    "target": "BalanceUnlocked",
+                    "action": "unlockBalance"
+                },
+                {
+                    "trigger": "MintTokens",
+                    "target": "TokensMinted",
+                    "action": "mint",
+                    "condition": "require(balances[founder] >= _value)"
+                },
+                {
+                    "trigger": "BurnTokens",
+                    "target": "TokensBurned",
+                    "action": "burn",
+                    "condition": "require(balances[founder] >= _value)"
+                }
+            ]
+        },
+        {
+            "name": "LockedBalanceTransferred",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Initial",
+                    "action": "transfer",
+                    "condition": "require(balances[msg.sender] >= tokens && tokens > 0)"
+                }
+            ]
+        },
+        {
+            "name": "BalanceUnlocked",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Initial",
+                    "action": "transfer",
+                    "condition": "require(balances[msg.sender] >= tokens && tokens > 0)"
+                }
+            ]
+        },
+        {
+            "name": "TokensMinted",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Initial",
+                    "action": "transfer",
+                    "condition": "require(balances[msg.sender] >= tokens && tokens > 0)"
+                }
+            ]
+        },
+        {
+            "name": "TokensBurned",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Initial",
+                    "action": "transfer",
+                    "condition": "require(balances[msg.sender] >= tokens && tokens > 0)"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "ZERO404 O41"
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "ZRO4"
+        },
+        {
+            "name": "decimals",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "supply",
+            "type": "uint",
+            "initialValue": 10000000000
+        },
+        {
+            "name": "founder",
+            "type": "address",
+            "initialValue": "msg.sender"
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "timeLockedBalances",
+            "type": "mapping(uint => mapping(address => uint))",
+            "initialValue": {}
+        },
+        {
+            "name": "lockedAddresses",
+            "type": "mapping(uint => address[])",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "transferLockedBalance",
+            "function": "Transfers locked balance to a specified address."
+        },
+        {
+            "name": "unlockBalance",
+            "function": "Unlocks a category of locked balance."
+        },
+        {
+            "name": "lockedBalanceOf",
+            "function": "Returns the locked balance of a specific address."
+        },
+        {
+            "name": "totalSupply",
+            "function": "Returns the total supply of tokens."
+        },
+        {
+            "name": "balanceOf",
+            "function": "Returns the balance of a specific token owner."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfers tokens from one address to another."
+        },
+        {
+            "name": "burn",
+            "function": "Burns tokens from the owner's balance."
+        },
+        {
+            "name": "mint",
+            "function": "Mints new tokens to the owner's balance."
+        }
+    ],
+    "events": ["Transfer"]
+}

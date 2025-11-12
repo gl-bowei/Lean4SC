@@ -1,0 +1,123 @@
+{
+    "contractName": "SCRedeem",
+    "inherited contracts": ["Ownable"],
+    "initialState": "Locked",
+    "states": [
+        {
+            "name": "Locked",
+            "transitions": [
+                {
+                    "trigger": "toggleLocked",
+                    "target": "Unlocked",
+                    "action": "Toggle Lock"
+                }
+            ]
+        },
+        {
+            "name": "Unlocked",
+            "transitions": [
+                {
+                    "trigger": "claimSC",
+                    "target": "RequestingRandomNumber",
+                    "action": "Claim SC"
+                },
+                {
+                    "trigger": "toggleLocked",
+                    "target": "Locked",
+                    "action": "Toggle Lock"
+                }
+            ]
+        },
+        {
+            "name": "RequestingRandomNumber",
+            "transitions": [
+                {
+                    "trigger": "randomNumberRequested",
+                    "target": "ProcessingRandomNumber",
+                    "action": "Process Random Number"
+                }
+            ]
+        },
+        {
+            "name": "ProcessingRandomNumber",
+            "transitions": [
+                {
+                    "trigger": "process",
+                    "target": "Claimable",
+                    "action": "Finalize Request"
+                }
+            ]
+        },
+        {
+            "name": "Claimable",
+            "transitions": [
+                {
+                    "trigger": "claim",
+                    "target": "Claimed",
+                    "action": "Mint NFT"
+                }
+            ]
+        },
+        {
+            "name": "Claimed",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "locked",
+            "type": "bool",
+            "initialValue": true
+        },
+        {
+            "name": "unlockTime",
+            "type": "uint256",
+            "initialValue": 1633618800
+        },
+        {
+            "name": "collectionSizes",
+            "type": "mapping(uint8 => uint8)",
+            "initialValue": {}
+        },
+        {
+            "name": "randomNumberRequests",
+            "type": "mapping(bytes32 => randomNumberRequest)",
+            "initialValue": {}
+        },
+        {
+            "name": "tokenToHash",
+            "type": "mapping(uint16 => bytes32)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "claimSC",
+            "function": "Allows users to claim SC if conditions are met."
+        },
+        {
+            "name": "process",
+            "function": "Processes the random number and determines the minting collection."
+        },
+        {
+            "name": "claim",
+            "function": "Claims the minted NFT."
+        },
+        {
+            "name": "toggleLocked",
+            "function": "Toggles the locked state of the contract."
+        },
+        {
+            "name": "removeUnlockTime",
+            "function": "Removes the unlock time constraint."
+        },
+        {
+            "name": "getStats",
+            "function": "Retrieves stats of a random number request."
+        }
+    ],
+    "events": [
+        "Redeem",
+        "Claim"
+    ]
+}

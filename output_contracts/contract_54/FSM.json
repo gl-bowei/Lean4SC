@@ -1,0 +1,63 @@
+{
+    "contractName": "DAOFactoryContract",
+    "inherited contracts": [],
+    "initialState": "CREATION",
+    "states": [
+      {
+        "name": "CREATION",
+        "transitions": [
+          {
+            "trigger": "CreateDAO",
+            "target": "ACTIVE",
+            "action": "createDaoAction"
+          },
+          {
+            "trigger": "AddAdapters",
+            "target": "CREATION",
+            "action": "addAdaptersAction"
+          },
+          {
+            "trigger": "ConfigureExtension",
+            "target": "CREATION",
+            "action": "configureExtensionAction"
+          }
+        ]
+      },
+      {
+        "name": "ACTIVE",
+        "transitions": []
+      }
+    ],
+    "variables": [
+      {
+        "name": "daos",
+        "type": "address[]",
+        "initialValue": []
+      },
+      {
+        "name": "addresses",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      },
+      {
+        "name": "identityAddress",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      }
+    ],
+    "functions": [
+      {
+        "name": "createDaoAction",
+        "function": "The function that creates a new DAO."
+      },
+      {
+        "name": "addAdaptersAction",
+        "function": "The function to add adapters to the DAO."
+      },
+      {
+        "name": "configureExtensionAction",
+        "function": "The function to configure extensions for the DAO."
+      }
+    ],
+    "events": ["DAOCreated"]
+}

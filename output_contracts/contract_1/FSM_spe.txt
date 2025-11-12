@@ -1,0 +1,60 @@
+Contract: ZapInContract
+Specification: Synchronous Model (based on requirement.txt and solidity_code.sol)
+
+--- FSM 元组 <S, s0, C, I, O, -> ---
+
+S (有限状态集):
+  { Enabled, Paused }
+  (此 FSM 状态基于 'stopped' 变量)
+
+s0 (初始状态):
+  Enabled
+  (对应构造函数中的 'stopped = false')
+
+C (合约变量):
+  - owner: Address
+  - goodwill: UInt
+  - stopped: Bool
+  - exchange2Token: Address
+  - tokenAddresses: Mapping[Address -> Bool]
+
+I (输入变量):
+  - msg.sender: Address
+  - msg.value: UInt
+  - token: Address (来自函数参数)
+
+O (输出/事件):
+  - ContractActivated
+  - ContractPaused
+  - TokenApprovalConfirmed
+
+--- 转换关系 (->) ---
+
+1. 转换: pause()
+   - 路径: (Enabled) -> (Paused)
+   - 触发器: pause()
+   - G_1 (守卫): msg.sender == C.owner
+   - F_1 (动作): { C.stopped := true; emit ContractPaused(); }
+
+2. 转换: activate()
+   - 路径: (Paused) -> (Enabled)
+   - 触发器: activate()
+   - G_2 (守卫): msg.sender == C.owner
+   - F_2 (动作): { C.stopped := false; emit ContractActivated(); }
+
+3. 转换: approveToken()
+   - 路径: (Enabled) -> (Enabled) [自循环]
+   - 触发器: approveToken(token)
+   - G_3 (守卫): true (无特殊守卫, 仅检查 Enabled)
+   - F_3 (动作): { C.tokenAddresses[I.token] := true; emit TokenApprovalConfirmed(); }
+
+4. 转换: ZapIn()
+   - 路径: (Enabled) -> (Enabled) [自循环]
+   - 触发器: ZapIn(token)
+   - G_4 (守卫): C.tokenAddresses[I.token] == true
+   - F_4 (动作): {
+       _performTrade(I.token);
+       _addLiquidity(I.token);
+       _returnPoolTokens(I.msg.sender);
+     }
+   (这是一个原子动作，忠实于 'requirement.txt' 的同步描述)

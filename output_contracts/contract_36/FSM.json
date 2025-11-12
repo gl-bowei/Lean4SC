@@ -1,0 +1,127 @@
+{
+    "contractName": "FriendToken",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Deploy",
+                    "target": "TokenDistributed",
+                    "action": "Distribute initial tokens"
+                }
+            ]
+        },
+        {
+            "name": "TokenDistributed",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokensTransferred",
+                    "action": "Execute token transfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "TokensApproved",
+                    "action": "Set allowance for spender"
+                }
+            ]
+        },
+        {
+            "name": "TokensTransferred",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokensTransferred",
+                    "action": "Execute token transfer"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokensTransferred",
+                    "action": "Execute transfer from another account"
+                }
+            ]
+        },
+        {
+            "name": "TokensApproved",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokensTransferred",
+                    "action": "Execute transfer from approved account"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "FRN"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Friend"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 100000000000000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "totalSupply",
+            "function": "Returns the total supply of tokens."
+        },
+        {
+            "name": "balanceOf",
+            "function": "Returns the token balance for a specific account."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfers tokens from the caller's account to a specified account."
+        },
+        {
+            "name": "approve",
+            "function": "Allows a spender to withdraw up to a specified amount from the caller's account."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens from one account to another using allowance."
+        },
+        {
+            "name": "allowance",
+            "function": "Returns the amount of tokens that a spender is allowed to withdraw from an owner's account."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Approves the spending of tokens and calls a function on the spender."
+        },
+        {
+            "name": "transferAnyERC20Token",
+            "function": "Allows the owner to transfer out any accidentally sent ERC20 tokens."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Approval"
+    ]
+}

@@ -1,0 +1,107 @@
+{
+    "contractName": "vDODOTokenContract",
+    "inherited contracts": [],
+    "initialState": "Minting",
+    "states": [
+      {
+        "name": "Minting",
+        "transitions": [
+          {
+            "trigger": "MintVDODO",
+            "target": "Minting",
+            "action": "mint",
+            "condition": "userProvidesDODOTokens"
+          },
+          {
+            "trigger": "Transfer",
+            "target": "Transferring",
+            "action": "actionTransfer",
+            "condition": "userHasVDODOTokens"
+          }
+        ]
+      },
+      {
+        "name": "Redeeming",
+        "transitions": [
+          {
+            "trigger": "RedeemVDODO",
+            "target": "Minting",
+            "action": "redeem",
+            "condition": "userHasVDODOTokens"
+          }
+        ]
+      },
+      {
+        "name": "Donating",
+        "transitions": [
+          {
+            "trigger": "DonateDODO",
+            "target": "Minting",
+            "action": "donate",
+            "condition": "userWantsToDonate"
+          }
+        ]
+      },
+      {
+        "name": "Transferring",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "Transferring",
+            "action": "transferTokens",
+            "condition": "userHasVDODOTokens"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "tokenName",
+        "type": "string",
+        "initialValue": "vDODO"
+      },
+      {
+        "name": "symbol",
+        "type": "string",
+        "initialValue": "vDODO"
+      },
+      {
+        "name": "decimals",
+        "type": "uint8",
+        "initialValue": 18
+      },
+      {
+        "name": "userInfo",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "stakingParameters",
+        "type": "uint",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "mint",
+        "function": "The function to mint new vDODO tokens."
+      },
+      {
+        "name": "redeem",
+        "function": "The function to redeem vDODO tokens for DODO tokens."
+      },
+      {
+        "name": "donate",
+        "function": "The function to donate DODO tokens to increase staking power."
+      },
+      {
+        "name": "transferTokens",
+        "function": "The function to transfer vDODO tokens to other users."
+      },
+      {
+        "name": "approval",
+        "function": "The function to approve transfers of vDODO tokens."
+      }
+    ],
+    "events": ["MintVDODO", "RedeemVDODO", "DonateDODO", "Transfer"]
+}

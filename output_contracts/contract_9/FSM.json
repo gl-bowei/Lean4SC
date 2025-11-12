@@ -1,0 +1,120 @@
+{
+    "contractName": "SpaToken",
+    "inherited contracts": ["owned", "TokenERC20"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "setPrices",
+                    "target": "PricesSet",
+                    "action": "set new prices"
+                },
+                {
+                    "trigger": "freezeAccount",
+                    "target": "AccountFrozen",
+                    "action": "freeze account"
+                },
+                {
+                    "trigger": "buy",
+                    "target": "TokensBought",
+                    "action": "buy tokens"
+                },
+                {
+                    "trigger": "sell",
+                    "target": "TokensSold",
+                    "action": "sell tokens"
+                }
+            ]
+        },
+        {
+            "name": "PricesSet",
+            "transitions": [
+                {
+                    "trigger": "buy",
+                    "target": "TokensBought",
+                    "action": "buy tokens"
+                },
+                {
+                    "trigger": "sell",
+                    "target": "TokensSold",
+                    "action": "sell tokens"
+                }
+            ]
+        },
+        {
+            "name": "AccountFrozen",
+            "transitions": [
+                {
+                    "trigger": "buy",
+                    "target": "TokensBought",
+                    "action": "buy tokens",
+                    "condition": "account not frozen"
+                },
+                {
+                    "trigger": "sell",
+                    "target": "TokensSold",
+                    "action": "sell tokens",
+                    "condition": "account not frozen"
+                }
+            ]
+        },
+        {
+            "name": "TokensBought",
+            "transitions": [
+                {
+                    "trigger": "sell",
+                    "target": "TokensSold",
+                    "action": "sell tokens"
+                }
+            ]
+        },
+        {
+            "name": "TokensSold",
+            "transitions": [
+                {
+                    "trigger": "buy",
+                    "target": "TokensBought",
+                    "action": "buy tokens"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "sellPrice",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "buyPrice",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "frozenAccount",
+            "type": "mapping(address => bool)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "setPrices",
+            "function": "Set new buy and sell prices."
+        },
+        {
+            "name": "freezeAccount",
+            "function": "Freeze or unfreeze an account."
+        },
+        {
+            "name": "buy",
+            "function": "Allow users to buy tokens."
+        },
+        {
+            "name": "sell",
+            "function": "Allow users to sell tokens."
+        }
+    ],
+    "events": ["FrozenFunds"]
+}

@@ -1,0 +1,158 @@
+{
+    "contractName": "FitShibaInu",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "ContractCreation",
+                    "target": "Initialized",
+                    "action": "SetInitialValues"
+                }
+            ]
+        },
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferSuccessful",
+                    "action": "UpdateBalances"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "ApprovalGranted",
+                    "action": "SetAllowance"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferFromSuccessful",
+                    "action": "ExecuteTransferFrom"
+                },
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "ApprovalAndCallSuccessful",
+                    "action": "ExecuteApproveAndCall"
+                }
+            ]
+        },
+        {
+            "name": "TransferSuccessful",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferSuccessful",
+                    "action": "UpdateBalances"
+                },
+                {
+                    "trigger": "CompleteTransaction",
+                    "target": "Initialized",
+                    "action": "FinishTransaction"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalGranted",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferFromSuccessful",
+                    "action": "ExecuteTransferFrom"
+                },
+                {
+                    "trigger": "CompleteApproval",
+                    "target": "Initialized",
+                    "action": "CompleteApprovalProcess"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromSuccessful",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransaction",
+                    "target": "Initialized",
+                    "action": "FinishTransaction"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalAndCallSuccessful",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransaction",
+                    "target": "Initialized",
+                    "action": "FinishTransaction"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "FitInu💪"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "FitShibaInu"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 1000000000000000000000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "SetInitialValues",
+            "function": "Initialize contract properties."
+        },
+        {
+            "name": "UpdateBalances",
+            "function": "Update the balances during transfers."
+        },
+        {
+            "name": "SetAllowance",
+            "function": "Set the allowance for a spender."
+        },
+        {
+            "name": "ExecuteTransferFrom",
+            "function": "Execute transfer from approved account."
+        },
+        {
+            "name": "ExecuteApproveAndCall",
+            "function": "Handle approval with additional call."
+        },
+        {
+            "name": "FinishTransaction",
+            "function": "Finalize the transaction."
+        },
+        {
+            "name": "CompleteApprovalProcess",
+            "function": "Complete the approval process."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Approval"
+    ]
+}

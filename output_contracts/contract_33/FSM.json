@@ -1,0 +1,181 @@
+{
+    "contractName": "GRIC_COIN",
+    "inherited contracts": ["ERC20"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Mint",
+                    "target": "Minted",
+                    "action": "mint",
+                    "condition": "ownership"
+                },
+                {
+                    "trigger": "Exchange",
+                    "target": "Exchanged",
+                    "action": "exchange"
+                },
+                {
+                    "trigger": "UpdateRate",
+                    "target": "RateUpdated",
+                    "action": "updateRate",
+                    "condition": "ownership"
+                },
+                {
+                    "trigger": "UpdateTokenAddress",
+                    "target": "TokenAddressUpdated",
+                    "action": "updatetokenaddress",
+                    "condition": "ownership"
+                },
+                {
+                    "trigger": "WithdrawOldToken",
+                    "target": "OldTokenWithdrawn",
+                    "action": "withdrawoldtoken",
+                    "condition": "ownership"
+                },
+                {
+                    "trigger": "TransferOwnership",
+                    "target": "OwnershipTransferred",
+                    "action": "transferownership",
+                    "condition": "ownership"
+                }
+            ]
+        },
+        {
+            "name": "Minted",
+            "transitions": [
+                {
+                    "trigger": "ChangeAmount",
+                    "target": "Initial",
+                    "action": "update mint status"
+                }
+            ]
+        },
+        {
+            "name": "Exchanged",
+            "transitions": [
+                {
+                    "trigger": "CompleteExchange",
+                    "target": "Initial",
+                    "action": "finalize exchange"
+                }
+            ]
+        },
+        {
+            "name": "RateUpdated",
+            "transitions": [
+                {
+                    "trigger": "ConfirmRateChange",
+                    "target": "Initial",
+                    "action": "apply new rate"
+                }
+            ]
+        },
+        {
+            "name": "TokenAddressUpdated",
+            "transitions": [
+                {
+                    "trigger": "ConfirmTokenAddressChange",
+                    "target": "Initial",
+                    "action": "apply new token address"
+                }
+            ]
+        },
+        {
+            "name": "OldTokenWithdrawn",
+            "transitions": [
+                {
+                    "trigger": "ConfirmWithdrawal",
+                    "target": "Initial",
+                    "action": "finalize token withdrawal"
+                }
+            ]
+        },
+        {
+            "name": "OwnershipTransferred",
+            "transitions": [
+                {
+                    "trigger": "ConfirmOwnershipChange",
+                    "target": "Initial",
+                    "action": "finalize ownership transfer"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_name",
+            "type": "string",
+            "initialValue": "Gric Coin"
+        },
+        {
+            "name": "_symbol",
+            "type": "string",
+            "initialValue": "GC"
+        },
+        {
+            "name": "_decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint256",
+            "initialValue": 20000000
+        },
+        {
+            "name": "_admin",
+            "type": "address",
+            "initialValue": ""
+        },
+        {
+            "name": "exchangeRate",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "tokenaddress",
+            "type": "address",
+            "initialValue": ""
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "mint",
+            "function": "Increases total supply and allocates tokens to the admin."
+        },
+        {
+            "name": "exchange",
+            "function": "Exchanges tokens based on the current exchange rate."
+        },
+        {
+            "name": "updateRate",
+            "function": "Updates the exchange rate for the tokens."
+        },
+        {
+            "name": "updatetokenaddress",
+            "function": "Changes the address of the old token."
+        },
+        {
+            "name": "withdrawoldtoken",
+            "function": "Withdraws old tokens to a specified address."
+        },
+        {
+            "name": "transferownership",
+            "function": "Transfers ownership of the contract to a new address."
+        }
+    ],
+    "events": ["oldtokenhistory"]
+}

@@ -1,0 +1,88 @@
+{
+    "contractName": "Adopt A Ukrainian Girl",
+    "inherited contracts": [],
+    "initialState": "TradingDisabled",
+    "states": [
+      {
+        "name": "TradingDisabled",
+        "transitions": [
+          {
+            "trigger": "EnableTrading",
+            "target": "TradingEnabled",
+            "action": "setTrading",
+            "condition": "isOwner"
+          }
+        ]
+      },
+      {
+        "name": "TradingEnabled",
+        "transitions": [
+          {
+            "trigger": "DisableTrading",
+            "target": "TradingDisabled",
+            "action": "setTrading",
+            "condition": "isOwner"
+          },
+          {
+            "trigger": "TransferToken",
+            "target": "TradingEnabled",
+            "action": "transfer",
+            "condition": "validTransfer"
+          },
+          {
+            "trigger": "ApproveToken",
+            "target": "TradingEnabled",
+            "action": "approve",
+            "condition": "validApproval"
+          },
+          {
+            "trigger": "SwapTokens",
+            "target": "TradingEnabled",
+            "action": "swapTokensForEth",
+            "condition": "validSwap"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalSupply",
+        "type": "uint",
+        "initialValue": 1000000
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "allowances",
+        "type": "mapping(address => mapping(address => uint))",
+        "initialValue": {}
+      },
+      {
+        "name": "feeStructure",
+        "type": "uint",
+        "initialValue": 5
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Transfers tokens from the caller to a recipient."
+      },
+      {
+        "name": "approve",
+        "function": "Approves a spender to spend a certain amount of tokens on behalf of the caller."
+      },
+      {
+        "name": "swapTokensForEth",
+        "function": "Swaps tokens for ETH to provide liquidity."
+      },
+      {
+        "name": "setTrading",
+        "function": "Enables or disables trading based on the owner's command."
+      }
+    ],
+    "events": ["Transfer", "Approval"]
+}

@@ -1,0 +1,161 @@
+{
+    "contractName": "CFETHVault",
+    "inherited contracts": ["Ownable", "TokenClaimer", "ReentrancyGuard"],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "deposit",
+                    "target": "Depositing",
+                    "action": "actionDeposit"
+                },
+                {
+                    "trigger": "changeWithdrawFee",
+                    "target": "ChangingFee",
+                    "action": "actionChangeWithdrawFee"
+                },
+                {
+                    "trigger": "changeDepositFee",
+                    "target": "ChangingFee",
+                    "action": "actionChangeDepositFee"
+                },
+                {
+                    "trigger": "changeController",
+                    "target": "ChangingController",
+                    "action": "actionChangeController"
+                },
+                {
+                    "trigger": "changeFeePool",
+                    "target": "ChangingFeePool",
+                    "action": "actionChangeFeePool"
+                }
+            ]
+        },
+        {
+            "name": "Depositing",
+            "transitions": [
+                {
+                    "trigger": "CFFDeposit",
+                    "target": "Idle",
+                    "action": "actionCFFDeposit"
+                }
+            ]
+        },
+        {
+            "name": "ChangingFee",
+            "transitions": [
+                {
+                    "trigger": "ChangeWithdrawFee",
+                    "target": "Idle",
+                    "action": "actionChangeWithdrawFee"
+                },
+                {
+                    "trigger": "ChangeDepositFee",
+                    "target": "Idle",
+                    "action": "actionChangeDepositFee"
+                }
+            ]
+        },
+        {
+            "name": "ChangingController",
+            "transitions": [
+                {
+                    "trigger": "ChangeController",
+                    "target": "Idle",
+                    "action": "actionChangeController"
+                }
+            ]
+        },
+        {
+            "name": "ChangingFeePool",
+            "transitions": [
+                {
+                    "trigger": "ChangeFeePool",
+                    "target": "Idle",
+                    "action": "actionChangeFeePool"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "controller",
+            "type": "CFETHControllerInterface",
+            "initialValue": "address(0x0)"
+        },
+        {
+            "name": "ratio_base",
+            "type": "uint256",
+            "initialValue": 10000
+        },
+        {
+            "name": "withdraw_fee_ratio",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "deposit_fee_ratio",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "fee_pool",
+            "type": "address payable",
+            "initialValue": "address(0x0)"
+        },
+        {
+            "name": "lp_token",
+            "type": "address",
+            "initialValue": "address(0x0)"
+        },
+        {
+            "name": "max_amount",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "slip",
+            "type": "uint256",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "actionDeposit",
+            "function": "Handle the deposit logic."
+        },
+        {
+            "name": "actionCFFDeposit",
+            "function": "Emits CFFDeposit event."
+        },
+        {
+            "name": "actionChangeWithdrawFee",
+            "function": "Change the withdrawal fee."
+        },
+        {
+            "name": "actionChangeDepositFee",
+            "function": "Change the deposit fee."
+        },
+        {
+            "name": "actionChangeController",
+            "function": "Change the controller."
+        },
+        {
+            "name": "actionChangeFeePool",
+            "function": "Change the fee pool address."
+        }
+    ],
+    "events": [
+        "ChangeMaxAmount",
+        "ChangeSlippage",
+        "CFFDeposit",
+        "CFFDepositFee",
+        "CFFWithdraw",
+        "ChangeWithdrawFee",
+        "ChangeDepositFee",
+        "ChangeController",
+        "ChangeFeePool"
+    ]
+}

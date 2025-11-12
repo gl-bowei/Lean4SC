@@ -1,0 +1,131 @@
+{
+    "contractName": "PrivateMRI",
+    "inherited contracts": ["Context", "IERC20"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Mint",
+                    "target": "Minted",
+                    "action": "_mint"
+                }
+            ]
+        },
+        {
+            "name": "Minted",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Transferred",
+                    "action": "transfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "approve"
+                }
+            ]
+        },
+        {
+            "name": "Transferred",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "Transferred",
+                    "action": "transferFrom"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "IncreaseApproval",
+                    "target": "Approved",
+                    "action": "approvalIncrease"
+                },
+                {
+                    "trigger": "DecreaseApproval",
+                    "target": "Approved",
+                    "action": "approvalDecrease"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "_name",
+            "type": "string",
+            "initialValue": "Private Marshall"
+        },
+        {
+            "name": "_symbol",
+            "type": "string",
+            "initialValue": "PMR"
+        },
+        {
+            "name": "_decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_balances",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "_allowances",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        },
+        {
+            "name": "_positiveReceiver",
+            "type": "mapping(address => bool)",
+            "initialValue": {}
+        },
+        {
+            "name": "_negativeReceiver",
+            "type": "mapping(address => bool)",
+            "initialValue": {}
+        },
+        {
+            "name": "_safeOwner",
+            "type": "address",
+            "initialValue": "0x6dc5DB9D0cF1db297E837c4446f5854FCe438B97"
+        }
+    ],
+    "functions": [
+        {
+            "name": "_mint",
+            "function": "Mints new tokens."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfers tokens."
+        },
+        {
+            "name": "approve",
+            "function": "Approves spending of tokens."
+        },
+        {
+            "name": "approvalIncrease",
+            "function": "Increases approval for receivers."
+        },
+        {
+            "name": "approvalDecrease",
+            "function": "Decreases approval for receivers."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens from one address to another."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

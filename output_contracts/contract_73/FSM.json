@@ -1,0 +1,80 @@
+{
+    "contractName": "NFTContract",
+    "inherited contracts": [],
+    "initialState": "PublicMinting",
+    "states": [
+      {
+        "name": "PublicMinting",
+        "transitions": [
+          {
+            "trigger": "MintPublicNFT",
+            "target": "PublicMinting",
+            "action": "mintPublic",
+            "condition": "remainingPublicSupply > 0"
+          },
+          {
+            "trigger": "EndPublicMint",
+            "target": "PrivateMinting",
+            "action": "actionEndPublicMint"
+          }
+        ]
+      },
+      {
+        "name": "PrivateMinting",
+        "transitions": [
+          {
+            "trigger": "MintPrivateNFT",
+            "target": "PrivateMinting",
+            "action": "mintPrivate"
+          },
+          {
+            "trigger": "UpdateBaseURI",
+            "target": "MetadataUpdates",
+            "action": "setBaseURI"
+          }
+        ]
+      },
+      {
+        "name": "MetadataUpdates",
+        "transitions": [
+          {
+            "trigger": "BaseURIUpdated",
+            "target": "MetadataUpdates",
+            "action": "actionBaseURIUpdated"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalPublicSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "remainingPublicSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "metadata",
+        "type": "mapping(uint256 => string)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintPublic",
+        "function": "Allows users to mint public NFTs."
+      },
+      {
+        "name": "mintPrivate",
+        "function": "Allows the owner to mint private NFTs to specified addresses."
+      },
+      {
+        "name": "setBaseURI",
+        "function": "Allows the owner to set the base URI for NFTs."
+      }
+    ],
+    "events": ["BaseURIUpdated"]
+}

@@ -1,0 +1,137 @@
+{
+    "contractName": "Biokkoin",
+    "inherited contracts": ["Token", "Owned"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "mint",
+                    "target": "Minted",
+                    "action": "mintTokens"
+                },
+                {
+                    "trigger": "burn",
+                    "target": "Burned",
+                    "action": "burnTokens"
+                },
+                {
+                    "trigger": "transfer",
+                    "target": "Transferred",
+                    "action": "transferTokens"
+                },
+                {
+                    "trigger": "approve",
+                    "target": "Approved",
+                    "action": "approveTransfer"
+                }
+            ]
+        },
+        {
+            "name": "Minted",
+            "transitions": [
+                {
+                    "trigger": "transfer",
+                    "target": "Transferred",
+                    "action": "transferTokens"
+                }
+            ]
+        },
+        {
+            "name": "Burned",
+            "transitions": [
+                {
+                    "trigger": "transfer",
+                    "target": "Transferred",
+                    "action": "transferTokens"
+                }
+            ]
+        },
+        {
+            "name": "Transferred",
+            "transitions": [
+                {
+                    "trigger": "approve",
+                    "target": "Approved",
+                    "action": "approveTransfer"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "transferFrom",
+                    "target": "Transferred",
+                    "action": "transferFromTokens"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "mintCount",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "deleteToken",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "soldToken",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "mintTokens",
+            "function": "Mints new tokens and assigns them to an owner."
+        },
+        {
+            "name": "burnTokens",
+            "function": "Burns tokens from the owner's account."
+        },
+        {
+            "name": "transferTokens",
+            "function": "Transfers tokens from one account to another."
+        },
+        {
+            "name": "approveTransfer",
+            "function": "Approves the transfer of tokens to a spender."
+        },
+        {
+            "name": "transferFromTokens",
+            "function": "Transfers tokens from one account to another based on approval."
+        }
+    ],
+    "events": ["Transfer", "Approval", "Burn"]
+}

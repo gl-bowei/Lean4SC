@@ -1,0 +1,84 @@
+{
+    "contractName": "RetroactiveClaimsContract",
+    "inherited contracts": [],
+    "initialState": "RecipientsListOpen",
+    "states": [
+      {
+        "name": "RecipientsListOpen",
+        "transitions": [
+          {
+            "trigger": "EligibleRecipientsAdded",
+            "target": "RecipientsListOpen",
+            "action": "addEligibleRecipients"
+          },
+          {
+            "trigger": "LockRecipientsList",
+            "target": "RecipientsListLocked",
+            "action": "lockRecipientsList"
+          }
+        ]
+      },
+      {
+        "name": "RecipientsListLocked",
+        "transitions": [
+          {
+            "trigger": "Claimed",
+            "target": "ClaimsProcessed",
+            "action": "claim",
+            "condition": "recipientCanClaim"
+          }
+        ]
+      },
+      {
+        "name": "ClaimsProcessed",
+        "transitions": [
+          {
+            "trigger": "RetrieveToken",
+            "target": "ClaimsProcessed",
+            "action": "retrieveToken"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "xtk",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "eligibleRecipients",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      },
+      {
+        "name": "totalXtkDistribution",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "distributionUnitsMapping",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "addEligibleRecipients",
+        "function": "Function to add eligible recipients to the list."
+      },
+      {
+        "name": "lockRecipientsList",
+        "function": "Function to lock the list of eligible recipients."
+      },
+      {
+        "name": "claim",
+        "function": "Function for an eligible recipient to claim their tokens."
+      },
+      {
+        "name": "retrieveToken",
+        "function": "Function to retrieve tokens after claims have been processed."
+      }
+    ],
+    "events": ["EligibleRecipientsAdded", "Claimed"]
+}

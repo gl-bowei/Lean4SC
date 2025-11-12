@@ -1,0 +1,89 @@
+{
+    "contractName": "EVCC",
+    "inherited contracts": ["ERC20Token"],
+    "initialState": "InitialState",
+    "states": [
+        {
+            "name": "InitialState",
+            "transitions": [
+                {
+                    "trigger": "lockToken",
+                    "target": "TokensLocked",
+                    "action": "_lock_token"
+                },
+                {
+                    "trigger": "unlockToken",
+                    "target": "TokensUnlocked",
+                    "action": "_unlock_token"
+                },
+                {
+                    "trigger": "collectFromLocked",
+                    "target": "TokensCollectedLocked",
+                    "action": "collectFromLocked"
+                }
+            ]
+        },
+        {
+            "name": "TokensLocked",
+            "transitions": [
+                {
+                    "trigger": "unlockToken",
+                    "target": "TokensUnlocked",
+                    "action": "_unlock_token"
+                },
+                {
+                    "trigger": "collectFromLocked",
+                    "target": "TokensCollectedLocked",
+                    "action": "collectFromLocked"
+                }
+            ]
+        },
+        {
+            "name": "TokensUnlocked",
+            "transitions": [
+                {
+                    "trigger": "lockToken",
+                    "target": "TokensLocked",
+                    "action": "_lock_token"
+                }
+            ]
+        },
+        {
+            "name": "TokensCollectedLocked",
+            "transitions": [
+                {
+                    "trigger": "unlockToken",
+                    "target": "TokensUnlocked",
+                    "action": "_unlock_token"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_locked_balances",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "_lock_token",
+            "function": "Locks a specified amount of tokens from an owner's balance."
+        },
+        {
+            "name": "_unlock_token",
+            "function": "Unlocks a specified amount of tokens to an owner's balance."
+        },
+        {
+            "name": "collectFromLocked",
+            "function": "Collects locked tokens from multiple addresses and transfers to a recipient."
+        }
+    ],
+    "events": [
+        "TokenLocked",
+        "TokenUnlocked",
+        "Collect",
+        "CollectLocked"
+    ]
+}

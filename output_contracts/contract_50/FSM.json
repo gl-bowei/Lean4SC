@@ -1,0 +1,83 @@
+{
+    "contractName": "LotteryContract",
+    "inherited contracts": [],
+    "initialState": "LotteryCreation",
+    "states": [
+      {
+        "name": "LotteryCreation",
+        "transitions": [
+          {
+            "trigger": "CreateLottery",
+            "target": "TokenSelling",
+            "action": "initializeLottery"
+          }
+        ]
+      },
+      {
+        "name": "TokenSelling",
+        "transitions": [
+          {
+            "trigger": "BuyTokens",
+            "target": "TokenSelling",
+            "action": "approveToSell"
+          },
+          {
+            "trigger": "EndLottery",
+            "target": "PrizeDistribution",
+            "action": "determineWinner"
+          }
+        ]
+      },
+      {
+        "name": "PrizeDistribution",
+        "transitions": [
+          {
+            "trigger": "DistributePrize",
+            "target": "LotteryCreation",
+            "action": "withdrawForWinner"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "commissionSum",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "defaultParams",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "lotteries",
+        "type": "mapping(uint => Lottery)",
+        "initialValue": {}
+      },
+      {
+        "name": "lotteryCount",
+        "type": "uint",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "initializeLottery",
+        "function": "The function that initializes a new lottery."
+      },
+      {
+        "name": "approveToSell",
+        "function": "The function that allows users to buy tokens."
+      },
+      {
+        "name": "withdrawForWinner",
+        "function": "The function that distributes the prize to the winner."
+      },
+      {
+        "name": "updateParams",
+        "function": "The function that updates default parameters."
+      }
+    ],
+    "events": ["PurchaseError"]
+}

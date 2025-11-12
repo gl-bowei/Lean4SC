@@ -1,0 +1,88 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "Initialization",
+    "states": [
+        {
+            "name": "Initialization",
+            "transitions": [
+                {
+                    "trigger": "InitializeContract",
+                    "target": "CreditRateRetrieval",
+                    "action": "connectContract"
+                }
+            ]
+        },
+        {
+            "name": "CreditRateRetrieval",
+            "transitions": [
+                {
+                    "trigger": "RetrieveCreditRate",
+                    "target": "UpdatingTokenData",
+                    "action": "getCreditRate"
+                }
+            ]
+        },
+        {
+            "name": "UpdatingTokenData",
+            "transitions": [
+                {
+                    "trigger": "UpdateAttributes",
+                    "target": "Initialization",
+                    "action": "updateDebitRate"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "totalSupply",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "collateral_contract",
+            "type": "address",
+            "initialValue": "0x0000000000000000000000000000000000000000"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "DebitRate",
+            "type": "uint",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "connectContract",
+            "function": "Connects the contract to the collateral contract."
+        },
+        {
+            "name": "getCreditRate",
+            "function": "Retrieves the current credit rate."
+        },
+        {
+            "name": "updateDebitRate",
+            "function": "Updates the debit rate or token attributes."
+        },
+        {
+            "name": "setNewBlock",
+            "function": "Sets a new block with updated attributes."
+        }
+    ],
+    "events": ["NewBlockSet"]
+}

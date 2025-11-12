@@ -1,0 +1,127 @@
+{
+    "contractName": "iGniter",
+    "inherited contracts": ["SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "AssignInitialAddresses",
+                    "target": "AddressesAssigned",
+                    "action": "assignInitialAddresses",
+                    "condition": "block.number <= 7000000"
+                },
+                {
+                    "trigger": "AssignBountyAddresses",
+                    "target": "BountyAddressesAssigned",
+                    "action": "assignBountyAddresses",
+                    "condition": "block.number <= 7000000"
+                },
+                {
+                    "trigger": "UpdateCost",
+                    "target": "CostUpdated",
+                    "action": "updateCost",
+                    "condition": "isOwner"
+                }
+            ]
+        },
+        {
+            "name": "AddressesAssigned",
+            "transitions": [
+                {
+                    "trigger": "CompleteBountyAddresses",
+                    "target": "BountyCompleted",
+                    "action": "completeBountyAddresses",
+                    "condition": "block.number <= 7000000"
+                }
+            ]
+        },
+        {
+            "name": "BountyAddressesAssigned",
+            "transitions": [
+                {
+                    "trigger": "CompleteBountyAddresses",
+                    "target": "BountyCompleted",
+                    "action": "completeBountyAddresses",
+                    "condition": "block.number <= 7000000"
+                }
+            ]
+        },
+        {
+            "name": "BountyCompleted",
+            "transitions": [
+                {
+                    "trigger": "ServicePayment",
+                    "target": "PaymentProcessed",
+                    "action": "servicePayment",
+                    "condition": "msg.value >= currentCost && balanceOf[msg.sender] >= currentCost"
+                }
+            ]
+        },
+        {
+            "name": "CostUpdated",
+            "transitions": [
+                {
+                    "trigger": "ServicePayment",
+                    "target": "PaymentProcessed",
+                    "action": "servicePayment",
+                    "condition": "msg.value >= currentCost && balanceOf[msg.sender] >= currentCost"
+                }
+            ]
+        },
+        {
+            "name": "PaymentProcessed",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "currentCost",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "inrSessions",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "burnt",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "assignInitialAddresses",
+            "function": "Assign initial balances to a list of addresses."
+        },
+        {
+            "name": "assignBountyAddresses",
+            "function": "Assign bounty balances to a list of addresses."
+        },
+        {
+            "name": "completeBountyAddresses",
+            "function": "Complete the bounty assignment for a list of addresses."
+        },
+        {
+            "name": "servicePayment",
+            "function": "Process a service payment and burn tokens."
+        },
+        {
+            "name": "updateCost",
+            "function": "Update the current cost requirement for payments."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Burn",
+        "Approval"
+    ]
+}

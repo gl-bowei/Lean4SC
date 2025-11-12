@@ -1,0 +1,95 @@
+{
+    "contractName": "SEIToken",
+    "inherited contracts": ["ERC20", "Ownable"],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "mint",
+                    "target": "Minting",
+                    "action": "mintTokens"
+                },
+                {
+                    "trigger": "delegate",
+                    "target": "Delegating",
+                    "action": "delegateVotes"
+                },
+                {
+                    "trigger": "delegateBySig",
+                    "target": "Delegating",
+                    "action": "delegateVotesBySignature"
+                }
+            ]
+        },
+        {
+            "name": "Minting",
+            "transitions": [
+                {
+                    "trigger": "mintComplete",
+                    "target": "Idle",
+                    "action": "completeMint"
+                }
+            ]
+        },
+        {
+            "name": "Delegating",
+            "transitions": [
+                {
+                    "trigger": "delegateComplete",
+                    "target": "Idle",
+                    "action": "completeDelegation"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_delegates",
+            "type": "mapping(address => address)",
+            "initialValue": {}
+        },
+        {
+            "name": "checkpoints",
+            "type": "mapping(address => mapping(uint32 => Checkpoint))",
+            "initialValue": {}
+        },
+        {
+            "name": "numCheckpoints",
+            "type": "mapping(address => uint32)",
+            "initialValue": {}
+        },
+        {
+            "name": "nonces",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "mintTokens",
+            "function": "Creates `_amount` token to `_to`."
+        },
+        {
+            "name": "delegateVotes",
+            "function": "Delegates votes from `msg.sender` to `delegatee`."
+        },
+        {
+            "name": "delegateVotesBySignature",
+            "function": "Delegates votes from signatory to `delegatee` using a signature."
+        },
+        {
+            "name": "completeMint",
+            "function": "Finalizes the minting process."
+        },
+        {
+            "name": "completeDelegation",
+            "function": "Finalizes the delegation process."
+        }
+    ],
+    "events": [
+        "DelegateChanged",
+        "DelegateVotesChanged"
+    ]
+}

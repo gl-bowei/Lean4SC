@@ -1,0 +1,121 @@
+{
+    "contractName": "MultiSignWallet",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "activateSafeMode",
+                    "target": "SafeMode",
+                    "action": "emit SafeModeActivated"
+                },
+                {
+                    "trigger": "turnOffSafeMode",
+                    "target": "Normal",
+                    "action": "emit SafeModeInActivated"
+                },
+                {
+                    "trigger": "createForwarder",
+                    "target": "ForwarderCreated",
+                    "action": "emit ForwarderCreated"
+                },
+                {
+                    "trigger": "sendMultiSig",
+                    "target": "TransactionExecuted",
+                    "action": "emit Transacted"
+                },
+                {
+                    "trigger": "sendMultiSigToken",
+                    "target": "TokenTransferred",
+                    "action": "emit TokensTransfer"
+                }
+            ]
+        },
+        {
+            "name": "SafeMode",
+            "transitions": [
+                {
+                    "trigger": "turnOffSafeMode",
+                    "target": "Normal",
+                    "action": "emit SafeModeInActivated"
+                }
+            ]
+        },
+        {
+            "name": "Normal",
+            "transitions": [
+                {
+                    "trigger": "activateSafeMode",
+                    "target": "SafeMode",
+                    "action": "emit SafeModeActivated"
+                }
+            ]
+        },
+        {
+            "name": "ForwarderCreated",
+            "transitions": []
+        },
+        {
+            "name": "TransactionExecuted",
+            "transitions": []
+        },
+        {
+            "name": "TokenTransferred",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "signers",
+            "type": "address[]",
+            "initialValue": []
+        },
+        {
+            "name": "safeMode",
+            "type": "bool",
+            "initialValue": false
+        },
+        {
+            "name": "forwarderCount",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "lastsequenceId",
+            "type": "uint",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "activateSafeMode",
+            "function": "Irrevocably puts contract into safe mode."
+        },
+        {
+            "name": "turnOffSafeMode",
+            "function": "Irrevocably puts out contract into safe mode."
+        },
+        {
+            "name": "createForwarder",
+            "function": "Create a new contract that forwards funds to this contract."
+        },
+        {
+            "name": "sendMultiSig",
+            "function": "Execute a multi-signature transaction from this wallet."
+        },
+        {
+            "name": "sendMultiSigToken",
+            "function": "Execute a multi-signature token transfer from this wallet."
+        }
+    ],
+    "events": [
+        "Deposited",
+        "SafeModeActivated",
+        "SafeModeInActivated",
+        "ForwarderCreated",
+        "Transacted",
+        "TokensTransfer"
+    ]
+}

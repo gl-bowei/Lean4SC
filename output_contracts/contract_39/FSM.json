@@ -1,0 +1,68 @@
+{
+    "contractName": "StakingContract",
+    "inherited contracts": [],
+    "initialState": "StakingActive",
+    "states": [
+        {
+            "name": "StakingActive",
+            "transitions": [
+                {
+                    "trigger": "StakeStarted",
+                    "target": "StakingEnded",
+                    "action": "stakeHex",
+                    "condition": "validStakeAmount"
+                }
+            ]
+        },
+        {
+            "name": "StakingEnded",
+            "transitions": [
+                {
+                    "trigger": "StakeEnded",
+                    "target": "StakeWithdrawn",
+                    "action": "endStake"
+                }
+            ]
+        },
+        {
+            "name": "StakeWithdrawn",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "userInfo",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "stakeInfo",
+            "type": "mapping(address => (uint amount, uint duration))",
+            "initialValue": {}
+        },
+        {
+            "name": "fees",
+            "type": "uint",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "stakeHex",
+            "function": "Function to handle staking of HEX tokens."
+        },
+        {
+            "name": "endStake",
+            "function": "Function to end a stake and distribute the rewards."
+        },
+        {
+            "name": "updateUserData",
+            "function": "Function to update user information."
+        },
+        {
+            "name": "updateStakeData",
+            "function": "Function to update stake information."
+        }
+    ],
+    "events": ["StakeStarted", "StakeEnded"]
+}

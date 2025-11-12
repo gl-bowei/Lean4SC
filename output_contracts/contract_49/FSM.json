@@ -1,0 +1,154 @@
+{
+    "contractName": "ForrestFarm",
+    "inherited contracts": ["Ownable"],
+    "initialState": "Idle",
+    "states": [
+      {
+        "name": "Idle",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          },
+          {
+            "trigger": "Withdraw",
+            "target": "Withdrawn",
+            "action": "handleWithdraw"
+          },
+          {
+            "trigger": "EmergencyWithdraw",
+            "target": "EmergencyWithdrawn",
+            "action": "handleEmergencyWithdraw"
+          },
+          {
+            "trigger": "UpdateAllocPoint",
+            "target": "UpdatedAllocPoint",
+            "action": "updatePool"
+          },
+          {
+            "trigger": "SetGovernance",
+            "target": "GovernanceSet",
+            "action": "setGovernance"
+          },
+          {
+            "trigger": "DevFee",
+            "target": "DevFeeClaimed",
+            "action": "claimDevFee",
+            "condition": "devFeeUnlockTimeReached"
+          }
+        ]
+      },
+      {
+        "name": "Deposited",
+        "transitions": [
+          {
+            "trigger": "Withdraw",
+            "target": "Withdrawn",
+            "action": "handleWithdraw"
+          }
+        ]
+      },
+      {
+        "name": "Withdrawn",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          }
+        ]
+      },
+      {
+        "name": "EmergencyWithdrawn",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          }
+        ]
+      },
+      {
+        "name": "UpdatedAllocPoint",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          }
+        ]
+      },
+      {
+        "name": "GovernanceSet",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          }
+        ]
+      },
+      {
+        "name": "DevFeeClaimed",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Deposited",
+            "action": "handleDeposit"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalAllocPoint",
+        "type": "uint256",
+        "initialValue": 0
+      },
+      {
+        "name": "devFeeUnlockTime",
+        "type": "uint256",
+        "initialValue": 0
+      },
+      {
+        "name": "devFeeDelivered",
+        "type": "bool",
+        "initialValue": false
+      }
+    ],
+    "functions": [
+      {
+        "name": "handleDeposit",
+        "function": "Processes the deposit of LP tokens."
+      },
+      {
+        "name": "handleWithdraw",
+        "function": "Processes the withdrawal of LP tokens."
+      },
+      {
+        "name": "handleEmergencyWithdraw",
+        "function": "Processes emergency withdrawal of LP tokens."
+      },
+      {
+        "name": "updatePool",
+        "function": "Updates the given pool's FRT allocation."
+      },
+      {
+        "name": "setGovernance",
+        "function": "Sets the governance contract."
+      },
+      {
+        "name": "claimDevFee",
+        "function": "Claims the developer fee once the unlock time is reached."
+      }
+    ],
+    "events": [
+      "Deposit",
+      "Withdraw",
+      "EmergencyWithdraw",
+      "UpdateAllocPoint",
+      "SetGovernance",
+      "DevFee"
+    ]
+}

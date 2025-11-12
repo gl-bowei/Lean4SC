@@ -1,0 +1,126 @@
+{
+    "contractName": "PPY",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Construct",
+                    "target": "Initialized",
+                    "action": "Initialize contract with total supply"
+                }
+            ]
+        },
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Transferred",
+                    "action": "Execute token transfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "Set allowance for spender"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "Burned",
+                    "action": "Burn tokens from sender"
+                }
+            ]
+        },
+        {
+            "name": "Transferred",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "Transferred",
+                    "action": "Execute transfer from another account"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "Initialized",
+                    "action": "Notify spender after approval"
+                }
+            ]
+        },
+        {
+            "name": "Burned",
+            "transitions": [
+                {
+                    "trigger": "BurnFrom",
+                    "target": "Initialized",
+                    "action": "Burn tokens from another account"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Transfer tokens to another address"
+        },
+        {
+            "name": "approve",
+            "function": "Set allowance for a spender"
+        },
+        {
+            "name": "burn",
+            "function": "Burn tokens from sender's balance"
+        },
+        {
+            "name": "burnFrom",
+            "function": "Burn tokens from another account's balance"
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Set allowance and notify spender"
+        },
+        {
+            "name": "_transfer",
+            "function": "Internal transfer logic"
+        }
+    ],
+    "events": ["Transfer", "Burn"]
+}

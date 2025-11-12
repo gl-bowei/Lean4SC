@@ -1,0 +1,78 @@
+{
+    "contractName": "AllocationPoolContract",
+    "inherited contracts": [],
+    "initialState": "PoolCreation",
+    "states": [
+      {
+        "name": "PoolCreation",
+        "transitions": [
+          {
+            "trigger": "AllocPoolCreated",
+            "target": "ActivePool",
+            "action": "allocAddPool"
+          }
+        ]
+      },
+      {
+        "name": "ActivePool",
+        "transitions": [
+          {
+            "trigger": "AllocDeposit",
+            "target": "ActivePool",
+            "action": "allocDeposit"
+          },
+          {
+            "trigger": "AllocWithdraw",
+            "target": "PendingWithdrawal",
+            "action": "allocWithdraw"
+          }
+        ]
+      },
+      {
+        "name": "PendingWithdrawal",
+        "transitions": [
+          {
+            "trigger": "TimeElapsed",
+            "target": "ActivePool",
+            "action": "allocClaimReward"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "allocRewardToken",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "allocPoolInfo",
+        "type": "mapping(uint => PoolInfo)",
+        "initialValue": {}
+      },
+      {
+        "name": "allocUserInfo",
+        "type": "mapping(address => UserInfo)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "allocAddPool",
+        "function": "The function to add a new pool for liquidity allocation."
+      },
+      {
+        "name": "allocDeposit",
+        "function": "The function to allow users to deposit LP tokens."
+      },
+      {
+        "name": "allocWithdraw",
+        "function": "The function to facilitate the withdrawal of tokens."
+      },
+      {
+        "name": "allocClaimReward",
+        "function": "The function to enable users to claim their rewards."
+      }
+    ],
+    "events": ["AllocPoolCreated", "AllocDeposit", "AllocWithdraw"]
+}

@@ -1,0 +1,68 @@
+{
+    "contractName": "Signer",
+    "inherited contracts": ["ISignatureValidator"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "generateSignature",
+                    "target": "SignatureGenerated",
+                    "action": "createSignature",
+                    "condition": "validTransactionParameters"
+                }
+            ]
+        },
+        {
+            "name": "SignatureGenerated",
+            "transitions": [
+                {
+                    "trigger": "isValidSignature",
+                    "target": "SignatureValidated",
+                    "action": "validateSignature"
+                }
+            ]
+        },
+        {
+            "name": "SignatureValidated",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "approvedSignatures",
+            "type": "mapping(bytes32 => bytes32)",
+            "initialValue": {}
+        },
+        {
+            "name": "safe",
+            "type": "address",
+            "initialValue": "immutable"
+        },
+        {
+            "name": "seedFactory",
+            "type": "address",
+            "initialValue": "immutable"
+        }
+    ],
+    "functions": [
+        {
+            "name": "generateSignature",
+            "function": "Generates a signature for a transaction."
+        },
+        {
+            "name": "isValidSignature",
+            "function": "Validates a given signature."
+        },
+        {
+            "name": "_getFunctionHashFromData",
+            "function": "Extracts the function hash from the transaction data."
+        },
+        {
+            "name": "_encodeMessageHash",
+            "function": "Encodes a message hash with constants."
+        }
+    ],
+    "events": ["SignatureCreated"]
+}

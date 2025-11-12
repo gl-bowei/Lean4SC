@@ -1,0 +1,102 @@
+{
+    "contractName": "NFTMintingContract",
+    "inherited contracts": [],
+    "initialState": "Paused",
+    "states": [
+      {
+        "name": "Paused",
+        "transitions": [
+          {
+            "trigger": "Unpause",
+            "target": "MintingActive",
+            "action": "unpauseContract"
+          }
+        ]
+      },
+      {
+        "name": "MintingActive",
+        "transitions": [
+          {
+            "trigger": "MintNFT",
+            "target": "MintingActive",
+            "action": "mintNFT",
+            "condition": "checkMintConditions"
+          },
+          {
+            "trigger": "CompleteMinting",
+            "target": "Revealed",
+            "action": "completeMinting"
+          }
+        ]
+      },
+      {
+        "name": "Revealed",
+        "transitions": [
+          {
+            "trigger": "RevealMetadata",
+            "target": "Revealed",
+            "action": "revealMetadata"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "baseURI",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "cost",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "maxSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "paused",
+        "type": "bool",
+        "initialValue": true
+      },
+      {
+        "name": "revealed",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "addressMintedBalance",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintNFT",
+        "function": "Allows users to mint NFTs."
+      },
+      {
+        "name": "revealMetadata",
+        "function": "Reveals the metadata of the NFTs."
+      },
+      {
+        "name": "setCosts",
+        "function": "Sets the cost of minting."
+      },
+      {
+        "name": "manageWhitelists",
+        "function": "Manages the whitelist for minting."
+      },
+      {
+        "name": "unpauseContract",
+        "function": "Unpauses the contract to allow minting."
+      }
+    ],
+    "events": [
+      "NFTMinted",
+      "MetadataRevealed",
+      "WhitelistUpdated"
+    ]
+}

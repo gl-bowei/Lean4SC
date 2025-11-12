@@ -1,0 +1,118 @@
+{
+    "contractName": "OEO",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferState",
+                    "action": "transfer",
+                    "condition": "none"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "BurnState",
+                    "action": "burn",
+                    "condition": "none"
+                }
+            ]
+        },
+        {
+            "name": "TransferState",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferState",
+                    "action": "transferFrom"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "ApprovalState",
+                    "action": "approve"
+                }
+            ]
+        },
+        {
+            "name": "BurnState",
+            "transitions": [
+                {
+                    "trigger": "BurnFrom",
+                    "target": "BurnState",
+                    "action": "burnFrom"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalState",
+            "transitions": [
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "TransferState",
+                    "action": "approveAndCall"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Transfers tokens from sender to recipient."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens on behalf of another address."
+        },
+        {
+            "name": "approve",
+            "function": "Sets allowance for a spender."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Approves and calls the spender."
+        },
+        {
+            "name": "burn",
+            "function": "Burns tokens from sender's account."
+        },
+        {
+            "name": "burnFrom",
+            "function": "Burns tokens from a specified account."
+        }
+    ],
+    "events": ["Transfer", "Burn"]
+}

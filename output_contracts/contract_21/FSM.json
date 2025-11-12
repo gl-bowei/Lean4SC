@@ -1,0 +1,83 @@
+{
+    "contractName": "NFTMintingContract",
+    "inherited contracts": ["ERC721A"],
+    "initialState": "PublicSaleClosed",
+    "states": [
+      {
+        "name": "PublicSaleClosed",
+        "transitions": [
+          {
+            "trigger": "TogglePublicSale",
+            "target": "PublicSaleOpen",
+            "action": "togglePublicSale"
+          }
+        ]
+      },
+      {
+        "name": "PublicSaleOpen",
+        "transitions": [
+          {
+            "trigger": "TogglePublicSale",
+            "target": "PublicSaleClosed",
+            "action": "togglePublicSale"
+          },
+          {
+            "trigger": "Mint",
+            "target": "PublicSaleOpen",
+            "action": "mint",
+            "condition": "quantity > 0 && quantity <= MAX_PER_TXN && totalSupply + quantity <= maxSupply"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "PRICE",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "MAX_PER_TXN",
+        "type": "uint",
+        "initialValue": 5
+      },
+      {
+        "name": "publicSale",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "maxSupply",
+        "type": "uint",
+        "initialValue": 10000
+      },
+      {
+        "name": "freeMaxSupply",
+        "type": "uint",
+        "initialValue": 1000
+      }
+    ],
+    "functions": [
+      {
+        "name": "togglePublicSale",
+        "function": "Toggles the public sale status."
+      },
+      {
+        "name": "mint",
+        "function": "Allows users to mint specified quantities of tokens."
+      },
+      {
+        "name": "adminMint",
+        "function": "Allows admins to mint tokens directly."
+      },
+      {
+        "name": "decreaseTotalSupply",
+        "function": "Decreases the total supply of tokens."
+      },
+      {
+        "name": "setBaseURI",
+        "function": "Sets the base URI for the token metadata."
+      }
+    ],
+    "events": ["PublicSaleActivated", "Minted"]
+}

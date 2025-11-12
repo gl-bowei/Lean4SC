@@ -1,0 +1,144 @@
+{
+    "contractName": "wkaToken",
+    "inherited contracts": ["ERC20Interface", "Owned"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Constructor",
+                    "target": "TokenInitialized",
+                    "action": "InitializeToken"
+                }
+            ]
+        },
+        {
+            "name": "TokenInitialized",
+            "transitions": [
+                {
+                    "trigger": "CallTransfer",
+                    "target": "TokenTransferred",
+                    "action": "TransferTokens"
+                },
+                {
+                    "trigger": "ApproveSpender",
+                    "target": "SpenderApproved",
+                    "action": "ApproveTokens"
+                },
+                {
+                    "trigger": "CallTransferFrom",
+                    "target": "TokensTransferredFrom",
+                    "action": "TransferTokensFrom"
+                },
+                {
+                    "trigger": "GetAllowance",
+                    "target": "AllowanceChecked",
+                    "action": "CheckAllowance"
+                },
+                {
+                    "trigger": "CallApproveAndCall",
+                    "target": "ApprovedAndCalled",
+                    "action": "ApproveAndCallSpender"
+                }
+            ]
+        },
+        {
+            "name": "TokenTransferred",
+            "transitions": [
+                {
+                    "trigger": "CallTransfer",
+                    "target": "TokenTransferred",
+                    "action": "TransferTokens"
+                }
+            ]
+        },
+        {
+            "name": "SpenderApproved",
+            "transitions": [
+                {
+                    "trigger": "CallTransferFrom",
+                    "target": "TokensTransferredFrom",
+                    "action": "TransferTokensFrom"
+                }
+            ]
+        },
+        {
+            "name": "TokensTransferredFrom",
+            "transitions": [
+                {
+                    "trigger": "GetAllowance",
+                    "target": "AllowanceChecked",
+                    "action": "CheckAllowance"
+                }
+            ]
+        },
+        {
+            "name": "AllowanceChecked",
+            "transitions": []
+        },
+        {
+            "name": "ApprovedAndCalled",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "wka"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "wka"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 10000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "InitializeToken",
+            "function": "Initialize the token with name, symbol, decimals, and total supply."
+        },
+        {
+            "name": "TransferTokens",
+            "function": "Transfer tokens from one address to another."
+        },
+        {
+            "name": "ApproveTokens",
+            "function": "Approve a spender to spend tokens on behalf of the owner."
+        },
+        {
+            "name": "TransferTokensFrom",
+            "function": "Transfer tokens from a specified address with approval."
+        },
+        {
+            "name": "CheckAllowance",
+            "function": "Check the remaining tokens approved for the spender."
+        },
+        {
+            "name": "ApproveAndCallSpender",
+            "function": "Approve a spender and call their function."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

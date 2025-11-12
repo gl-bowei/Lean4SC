@@ -1,0 +1,100 @@
+{
+    "contractName": "YieldFarmUnix",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "massHarvest",
+                    "target": "MassHarvesting",
+                    "action": "Collect all unharvested rewards",
+                    "condition": "epochId calculated and valid"
+                },
+                {
+                    "trigger": "harvest",
+                    "target": "Harvesting",
+                    "action": "Collect reward for a specific epoch",
+                    "condition": "epochId is valid and in order"
+                }
+            ]
+        },
+        {
+            "name": "MassHarvesting",
+            "transitions": [
+                {
+                    "trigger": "CompletedMassHarvest",
+                    "target": "Initial",
+                    "action": "Distribute total rewards to user"
+                }
+            ]
+        },
+        {
+            "name": "Harvesting",
+            "transitions": [
+                {
+                    "trigger": "CompletedHarvest",
+                    "target": "Initial",
+                    "action": "Distribute user reward"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_poolTokenAddress",
+            "type": "address",
+            "initialValue": "null"
+        },
+        {
+            "name": "_communityVault",
+            "type": "address",
+            "initialValue": "null"
+        },
+        {
+            "name": "_totalAmountPerEpoch",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "lastInitializedEpoch",
+            "type": "uint128",
+            "initialValue": 0
+        },
+        {
+            "name": "lastEpochIdHarvested",
+            "type": "mapping(address => uint128)",
+            "initialValue": {}
+        },
+        {
+            "name": "epochDuration",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "epochStart",
+            "type": "uint",
+            "initialValue": 0
+        }
+    ],
+    "functions": [
+        {
+            "name": "massHarvest",
+            "function": "Harvests all unharvested epochs and transfers total value to the user."
+        },
+        {
+            "name": "harvest",
+            "function": "Harvests for a specific epoch and transfers the amount to the user."
+        },
+        {
+            "name": "_harvest",
+            "function": "Internal method that computes user total reward for a specified epoch."
+        },
+        {
+            "name": "_initEpoch",
+            "function": "Internal method that initializes a new epoch."
+        }
+    ],
+    "events": ["MassHarvest", "Harvest"]
+}

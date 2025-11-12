@@ -1,0 +1,178 @@
+{
+    "contractName": "WHC",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "Initialize",
+                    "target": "Initialized",
+                    "action": "Set totalSupply and balances"
+                }
+            ]
+        },
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferInProgress",
+                    "action": "Execute transfer of tokens"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferFromInProgress",
+                    "action": "Execute transferFrom operation"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "Set allowance for spending"
+                },
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "ApprovedWithCall",
+                    "action": "Approve and notify"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "BurnInProgress",
+                    "action": "Execute burn operation"
+                },
+                {
+                    "trigger": "BurnFrom",
+                    "target": "BurnFromInProgress",
+                    "action": "Execute burnFrom operation"
+                }
+            ]
+        },
+        {
+            "name": "TransferInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransfer",
+                    "target": "Initialized",
+                    "action": "Complete the transfer"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransferFrom",
+                    "target": "Initialized",
+                    "action": "Complete the transferFrom"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "CompleteApproval",
+                    "target": "Initialized",
+                    "action": "Complete the approval"
+                }
+            ]
+        },
+        {
+            "name": "ApprovedWithCall",
+            "transitions": [
+                {
+                    "trigger": "CompleteApprovalWithCall",
+                    "target": "Initialized",
+                    "action": "Complete approval and call"
+                }
+            ]
+        },
+        {
+            "name": "BurnInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteBurn",
+                    "target": "Initialized",
+                    "action": "Complete the burn"
+                }
+            ]
+        },
+        {
+            "name": "BurnFromInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteBurnFrom",
+                    "target": "Initialized",
+                    "action": "Complete the burnFrom"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 6
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "_transfer",
+            "function": "Internal transfer function between addresses."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfer tokens from sender to recipient."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfer tokens from one address to another on behalf of the sender."
+        },
+        {
+            "name": "approve",
+            "function": "Set allowance for another address to spend tokens."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Set allowance and notify the spender."
+        },
+        {
+            "name": "burn",
+            "function": "Remove tokens from the sender's balance."
+        },
+        {
+            "name": "burnFrom",
+            "function": "Remove tokens from another address's balance on behalf."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Burn"
+    ]
+}

@@ -1,0 +1,94 @@
+{
+    "contractName": "NFTMintingManagement",
+    "inherited contracts": [],
+    "initialState": "Minting Active",
+    "states": [
+        {
+            "name": "Minting Active",
+            "transitions": [
+                {
+                    "trigger": "CreateNFTMould",
+                    "target": "Minting Active",
+                    "action": "createNFTMouldAction"
+                },
+                {
+                    "trigger": "MintNFT",
+                    "target": "Minting Active",
+                    "action": "ownerMintAction",
+                    "condition": "mintingActive"
+                },
+                {
+                    "trigger": "EditionSizeReached",
+                    "target": "Minting Closed",
+                    "action": "closeMintingAction"
+                }
+            ]
+        },
+        {
+            "name": "Minting Closed",
+            "transitions": [
+                {
+                    "trigger": "EvolveNFT",
+                    "target": "NFT Evolved",
+                    "action": "evolveNFTAction"
+                },
+                {
+                    "trigger": "RedeemNFT",
+                    "target": "Minting Closed",
+                    "action": "redeemNFTAction"
+                }
+            ]
+        },
+        {
+            "name": "NFT Evolved",
+            "transitions": [
+                {
+                    "trigger": "RedeemNFT",
+                    "target": "Minting Closed",
+                    "action": "redeemNFTAction",
+                    "condition": "attributesAvailable"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "NFTIndex",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "mintingActive",
+            "type": "bool",
+            "initialValue": true
+        },
+        {
+            "name": "artworkData",
+            "type": "mapping(uint => string)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "createNFTMouldAction",
+            "function": "The function for creating NFT moulds."
+        },
+        {
+            "name": "ownerMintAction",
+            "function": "The function for minting NFTs by the owner."
+        },
+        {
+            "name": "evolveNFTAction",
+            "function": "The function for evolving NFTs to higher levels."
+        },
+        {
+            "name": "redeemNFTAction",
+            "function": "The function for redeeming NFTs for attributes."
+        }
+    ],
+    "events": [
+        "NewNFTMouldCreated",
+        "NewNFTCreatedFor",
+        "RedeemNFT"
+    ]
+}

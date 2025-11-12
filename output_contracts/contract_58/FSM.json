@@ -1,0 +1,112 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "MintingInactive",
+    "states": [
+      {
+        "name": "MintingInactive",
+        "transitions": [
+          {
+            "trigger": "ActivateMinting",
+            "target": "MintingActive",
+            "action": "setMintingActive"
+          }
+        ]
+      },
+      {
+        "name": "MintingActive",
+        "transitions": [
+          {
+            "trigger": "DeactivateMinting",
+            "target": "MintingInactive",
+            "action": "setMintingInactive"
+          },
+          {
+            "trigger": "MintNFTs",
+            "target": "MintingActive",
+            "action": "processMinting",
+            "condition": "checkSupplyAndPayment"
+          },
+          {
+            "trigger": "ReserveNFTs",
+            "target": "MintingActive",
+            "action": "reserveNFT"
+          },
+          {
+            "trigger": "SetBaseURI",
+            "target": "MintingActive",
+            "action": "updateBaseURI"
+          },
+          {
+            "trigger": "SetRoyalties",
+            "target": "MintingActive",
+            "action": "updateRoyalties"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "MAX_SUPPLY",
+        "type": "uint",
+        "initialValue": 10000
+      },
+      {
+        "name": "PRICE",
+        "type": "uint",
+        "initialValue": 0.05
+      },
+      {
+        "name": "MAX_PER_MINT",
+        "type": "uint",
+        "initialValue": 5
+      },
+      {
+        "name": "baseTokenURI",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "isActive",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "royalties",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "beneficiary",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      }
+    ],
+    "functions": [
+      {
+        "name": "setMintingActive",
+        "function": "Activates the minting process."
+      },
+      {
+        "name": "setMintingInactive",
+        "function": "Deactivates the minting process."
+      },
+      {
+        "name": "processMinting",
+        "function": "Handles the minting of NFTs by users."
+      },
+      {
+        "name": "reserveNFT",
+        "function": "Reserves NFTs for the contract owner."
+      },
+      {
+        "name": "updateBaseURI",
+        "function": "Updates the base URI for the NFTs."
+      },
+      {
+        "name": "updateRoyalties",
+        "function": "Sets the royalty percentage for NFT sales."
+      }
+    ],
+    "events": ["NFTMinted", "RoyaltyUpdated"]
+}

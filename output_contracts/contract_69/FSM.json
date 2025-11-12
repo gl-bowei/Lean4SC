@@ -1,0 +1,139 @@
+{
+    "contractName": "Timecoin",
+    "inherited contracts": [],
+    "initialState": "Initial",
+    "states": [
+      {
+        "name": "Initial",
+        "transitions": [
+          {
+            "trigger": "CreateTokens",
+            "target": "TokensCreated",
+            "action": "Initialize token supplies"
+          }
+        ]
+      },
+      {
+        "name": "TokensCreated",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "TokensTransferred",
+            "action": "Transfer tokens"
+          },
+          {
+            "trigger": "Burn",
+            "target": "TokensBurned",
+            "action": "Burn tokens"
+          },
+          {
+            "trigger": "Approve",
+            "target": "AllowanceSet",
+            "action": "Set allowance"
+          }
+        ]
+      },
+      {
+        "name": "TokensTransferred",
+        "transitions": [
+          {
+            "trigger": "TransferFrom",
+            "target": "TokensTransferred",
+            "action": "Transfer tokens from other address"
+          }
+        ]
+      },
+      {
+        "name": "TokensBurned",
+        "transitions": [
+          {
+            "trigger": "BurnFrom",
+            "target": "TokensBurned",
+            "action": "Burn tokens from another account"
+          }
+        ]
+      },
+      {
+        "name": "AllowanceSet",
+        "transitions": [
+          {
+            "trigger": "ApproveAndCall",
+            "target": "TokensApproved",
+            "action": "Approve and notify"
+          }
+        ]
+      },
+      {
+        "name": "TokensApproved",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "TokensTransferred",
+            "action": "Transfer tokens"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalSupply",
+        "type": "uint256",
+        "initialValue": 0
+      },
+      {
+        "name": "balanceOf",
+        "type": "mapping(address => uint256)",
+        "initialValue": {}
+      },
+      {
+        "name": "allowance",
+        "type": "mapping(address => mapping(address => uint256))",
+        "initialValue": {}
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "symbol",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "decimals",
+        "type": "uint8",
+        "initialValue": 18
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Transfer tokens to a specified address."
+      },
+      {
+        "name": "transferFrom",
+        "function": "Transfer tokens from one address to another on behalf of the sender."
+      },
+      {
+        "name": "approve",
+        "function": "Set allowance for a spender."
+      },
+      {
+        "name": "approveAndCall",
+        "function": "Set allowance and notify the spender."
+      },
+      {
+        "name": "burn",
+        "function": "Burn a specified amount of tokens from the sender."
+      },
+      {
+        "name": "burnFrom",
+        "function": "Burn a specified amount of tokens from another account."
+      }
+    ],
+    "events": [
+      "Transfer",
+      "Burn"
+    ]
+}

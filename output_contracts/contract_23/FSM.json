@@ -1,0 +1,96 @@
+{
+    "contractName": "HydraTester",
+    "inherited contracts": ["Ownable"],
+    "initialState": "Idle",
+    "states": [
+      {
+        "name": "Idle",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Depositing",
+            "action": "processDeposit"
+          },
+          {
+            "trigger": "Withdraw",
+            "target": "Withdrawing",
+            "action": "processWithdraw"
+          },
+          {
+            "trigger": "Migrate",
+            "target": "Migrating",
+            "action": "processMigrate"
+          }
+        ]
+      },
+      {
+        "name": "Depositing",
+        "transitions": [
+          {
+            "trigger": "DepositComplete",
+            "target": "Idle",
+            "action": "completeDeposit"
+          }
+        ]
+      },
+      {
+        "name": "Withdrawing",
+        "transitions": [
+          {
+            "trigger": "WithdrawComplete",
+            "target": "Idle",
+            "action": "completeWithdraw"
+          }
+        ]
+      },
+      {
+        "name": "Migrating",
+        "transitions": [
+          {
+            "trigger": "MigrationComplete",
+            "target": "Idle",
+            "action": "completeMigration"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "hydrazPerBlock",
+        "type": "uint256",
+        "initialValue": "set in constructor"
+      },
+      {
+        "name": "totalAllocPoint",
+        "type": "uint256",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "processDeposit",
+        "function": "Handles the deposit of LP tokens and updates state."
+      },
+      {
+        "name": "completeDeposit",
+        "function": "Finalizes the deposit process after updating state."
+      },
+      {
+        "name": "processWithdraw",
+        "function": "Handles the withdrawal of LP tokens and updates state."
+      },
+      {
+        "name": "completeWithdraw",
+        "function": "Finalizes the withdrawal process after updating state."
+      },
+      {
+        "name": "processMigrate",
+        "function": "Handles migration of LP tokens to a new contract."
+      },
+      {
+        "name": "completeMigration",
+        "function": "Finalizes the migration process."
+      }
+    ],
+    "events": ["Deposit", "Withdraw"]
+}

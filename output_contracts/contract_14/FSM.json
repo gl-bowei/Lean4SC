@@ -1,0 +1,87 @@
+{
+    "contractName": "LiquidityListingContract",
+    "inherited contracts": [],
+    "initialState": "Active",
+    "states": [
+      {
+        "name": "Active",
+        "transitions": [
+          {
+            "trigger": "Received",
+            "target": "Active",
+            "action": "acceptContribution"
+          },
+          {
+            "trigger": "Withdraw",
+            "target": "Inactive",
+            "action": "removeLiquidity"
+          },
+          {
+            "trigger": "stop",
+            "target": "Inactive",
+            "action": "stopContract"
+          }
+        ]
+      },
+      {
+        "name": "Inactive",
+        "transitions": [
+          {
+            "trigger": "start",
+            "target": "Active",
+            "action": "startContract"
+          },
+          {
+            "trigger": "claimTokens",
+            "target": "Inactive",
+            "action": "claimTokens"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "name",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "enable",
+        "type": "bool",
+        "initialValue": true
+      },
+      {
+        "name": "count",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "receivedEther",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "acceptContribution",
+        "function": "Accepts Ether contributions from users."
+      },
+      {
+        "name": "removeLiquidity",
+        "function": "Withdraws liquidity from the contract."
+      },
+      {
+        "name": "stopContract",
+        "function": "Stops the contract's operations."
+      },
+      {
+        "name": "startContract",
+        "function": "Starts the contract's operations."
+      },
+      {
+        "name": "claimTokens",
+        "function": "Claims the tokens held by the contract."
+      }
+    ],
+    "events": ["Received", "Withdraw"]
+}

@@ -1,0 +1,79 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "OpenForSale",
+    "states": [
+      {
+        "name": "OpenForSale",
+        "transitions": [
+          {
+            "trigger": "StartMinting",
+            "target": "MintingInProgress",
+            "action": "actionStartMinting"
+          }
+        ]
+      },
+      {
+        "name": "MintingInProgress",
+        "transitions": [
+          {
+            "trigger": "MintToken",
+            "target": "MintingInProgress",
+            "action": "mintTokens",
+            "condition": "validSignature && !sessionUsed"
+          },
+          {
+            "trigger": "EndSale",
+            "target": "SaleEnded",
+            "action": "actionEndSale"
+          }
+        ]
+      },
+      {
+        "name": "SaleEnded",
+        "transitions": [
+          {
+            "trigger": "WithdrawAll",
+            "target": "OpenForSale",
+            "action": "withdrawAll"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "_tokenURISuffixes",
+        "type": "string[]",
+        "initialValue": []
+      },
+      {
+        "name": "_usedSessions",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      },
+      {
+        "name": "MAX_UNITS",
+        "type": "uint",
+        "initialValue": 10000
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintTokens",
+        "function": "Mints an ERC721 token for a user after verifying their session ID and signature."
+      },
+      {
+        "name": "actionStartMinting",
+        "function": "Sets the contract state to start minting."
+      },
+      {
+        "name": "actionEndSale",
+        "function": "Concludes the sale of tokens."
+      },
+      {
+        "name": "withdrawAll",
+        "function": "Withdraws all tokens from the contract after the sale ends."
+      }
+    ],
+    "events": ["Mint"]
+}

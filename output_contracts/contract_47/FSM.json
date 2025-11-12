@@ -1,0 +1,135 @@
+{
+    "contractName": "Blocktorial",
+    "inherited contracts": ["owned"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferInProgress",
+                    "action": "_transfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "ApprovalInProgress",
+                    "action": "approve"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "BurnInProgress",
+                    "action": "burn"
+                },
+                {
+                    "trigger": "Mint",
+                    "target": "MintInProgress",
+                    "action": "mintToken"
+                }
+            ]
+        },
+        {
+            "name": "TransferInProgress",
+            "transitions": [
+                {
+                    "trigger": "TransferCompleted",
+                    "target": "Initialized",
+                    "action": "emit Transfer"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalInProgress",
+            "transitions": [
+                {
+                    "trigger": "ApprovalCompleted",
+                    "target": "Initialized",
+                    "action": "emit Approval"
+                }
+            ]
+        },
+        {
+            "name": "BurnInProgress",
+            "transitions": [
+                {
+                    "trigger": "BurnCompleted",
+                    "target": "Initialized",
+                    "action": "emit Burn"
+                }
+            ]
+        },
+        {
+            "name": "MintInProgress",
+            "transitions": [
+                {
+                    "trigger": "MintCompleted",
+                    "target": "Initialized",
+                    "action": "update balances and totalSupply"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Blocktorial Token"
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "BLKT"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 88000000000000000000000000
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "_transfer",
+            "function": "Internal function to facilitate token transfers."
+        },
+        {
+            "name": "transfer",
+            "function": "Public function to transfer tokens."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Public function to transfer tokens on behalf of another address."
+        },
+        {
+            "name": "approve",
+            "function": "Public function to approve allowances for token spending."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Public function to approve and call a receiving contract."
+        },
+        {
+            "name": "burn",
+            "function": "Public function to burn tokens."
+        },
+        {
+            "name": "mintToken",
+            "function": "Public function to mint new tokens."
+        }
+    ],
+    "events": ["Transfer", "Approval", "Burn"]
+}

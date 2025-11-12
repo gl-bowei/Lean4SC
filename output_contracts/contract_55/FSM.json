@@ -1,0 +1,121 @@
+{
+    "contractName": "MakroYield",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "ContractDeployment",
+                    "target": "TokenCreated",
+                    "action": "InitializeToken"
+                }
+            ]
+        },
+        {
+            "name": "TokenCreated",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokenTransferred",
+                    "action": "ExecuteTransfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "ApprovalGranted",
+                    "action": "GrantApproval"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokenTransferred",
+                    "action": "ExecuteTransferFrom"
+                },
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "ApprovalAndCallExecuted",
+                    "action": "ExecuteApproveAndCall"
+                }
+            ]
+        },
+        {
+            "name": "TokenTransferred",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokenTransferred",
+                    "action": "ExecuteTransfer"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalGranted",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokenTransferred",
+                    "action": "ExecuteTransferFrom"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalAndCallExecuted",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "MYI"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Makro.Yield"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 60000000000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "InitializeToken",
+            "function": "Sets the initial values for the token."
+        },
+        {
+            "name": "ExecuteTransfer",
+            "function": "Handles the transfer of tokens between accounts."
+        },
+        {
+            "name": "GrantApproval",
+            "function": "Allows a spender to transfer tokens from the owner's account."
+        },
+        {
+            "name": "ExecuteTransferFrom",
+            "function": "Handles the transfer of tokens from one account to another based on approval."
+        },
+        {
+            "name": "ExecuteApproveAndCall",
+            "function": "Approves a spender and calls a function on the spender's contract."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

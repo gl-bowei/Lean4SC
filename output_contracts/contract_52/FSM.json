@@ -1,0 +1,103 @@
+{
+    "contractName": "Chamacoin",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "ContractDeployment",
+                    "target": "SetupComplete",
+                    "action": "InitializeToken"
+                }
+            ]
+        },
+        {
+            "name": "SetupComplete",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokensTransferred",
+                    "action": "ExecuteTransfer"
+                }
+            ]
+        },
+        {
+            "name": "TokensTransferred",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TokensTransferred",
+                    "action": "HandleTransferFrom"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "TokensApproved",
+                    "action": "HandleApproval"
+                }
+            ]
+        },
+        {
+            "name": "TokensApproved",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TokensTransferred",
+                    "action": "ExecuteTransfer"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "CHMA"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Chamacoin"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 8
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 100000000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "InitializeToken",
+            "function": "Sets initial values for the token."
+        },
+        {
+            "name": "ExecuteTransfer",
+            "function": "Transfers tokens between accounts."
+        },
+        {
+            "name": "HandleTransferFrom",
+            "function": "Handles transfer of tokens from one account to another based on approval."
+        },
+        {
+            "name": "HandleApproval",
+            "function": "Handles approval of token transfer for a spender."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

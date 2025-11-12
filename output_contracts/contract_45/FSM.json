@@ -1,0 +1,74 @@
+{
+    "contractName": "TokenSaleContract",
+    "inherited contracts": [],
+    "initialState": "TokenSaleActive",
+    "states": [
+        {
+            "name": "TokenSaleActive",
+            "transitions": [
+                {
+                    "trigger": "PurchaseEvent",
+                    "target": "TokenSaleActive",
+                    "action": "buyToken",
+                    "condition": "isSaleActive"
+                },
+                {
+                    "trigger": "EndSaleEvent",
+                    "target": "TokenSaleEnded",
+                    "action": "calculateRemainingTokens"
+                }
+            ]
+        },
+        {
+            "name": "TokenSaleEnded",
+            "transitions": [
+                {
+                    "trigger": "WithdrawEvent",
+                    "target": "TokenSaleEnded",
+                    "action": "withdraw"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "cyceToken",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "WETH",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "usdPair",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "tokenList",
+            "type": "address[]",
+            "initialValue": []
+        }
+    ],
+    "functions": [
+        {
+            "name": "buyToken",
+            "function": "Purchases tokens using USD value."
+        },
+        {
+            "name": "getUSDValue",
+            "function": "Calculates the equivalent USD value for tokens."
+        },
+        {
+            "name": "withdraw",
+            "function": "Withdraws funds and remaining tokens after the sale."
+        }
+    ],
+    "events": [
+        "PurchaseEvent",
+        "EndSaleEvent",
+        "WithdrawEvent"
+    ]
+}

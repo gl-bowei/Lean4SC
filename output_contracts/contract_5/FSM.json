@@ -1,0 +1,98 @@
+{
+    "contractName": "AuctionContest",
+    "inherited contracts": [],
+    "initialState": "OpenForEntries",
+    "states": [
+      {
+        "name": "OpenForEntries",
+        "transitions": [
+          {
+            "trigger": "EntrySubmitted",
+            "target": "TournamentInProgress",
+            "action": "startTournament",
+            "condition": "submissionsClosed"
+          }
+        ]
+      },
+      {
+        "name": "TournamentInProgress",
+        "transitions": [
+          {
+            "trigger": "OracleVoting",
+            "target": "WaitingForOracles",
+            "action": "collectOracleVotes"
+          }
+        ]
+      },
+      {
+        "name": "WaitingForOracles",
+        "transitions": [
+          {
+            "trigger": "AllVotesSubmitted",
+            "target": "WaitingForWinningClaims",
+            "action": "determineWinners"
+          }
+        ]
+      },
+      {
+        "name": "WaitingForWinningClaims",
+        "transitions": [
+          {
+            "trigger": "ClaimsMade",
+            "target": "Completed",
+            "action": "distributePrizes"
+          }
+        ]
+      },
+      {
+        "name": "Completed",
+        "transitions": []
+      }
+    ],
+    "variables": [
+      {
+        "name": "entries",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "transitionTimes",
+        "type": "uint256",
+        "initialValue": 0
+      },
+      {
+        "name": "currentState",
+        "type": "string",
+        "initialValue": "OpenForEntries"
+      },
+      {
+        "name": "oracleVotes",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "finalResults",
+        "type": "string[]",
+        "initialValue": []
+      }
+    ],
+    "functions": [
+      {
+        "name": "startTournament",
+        "function": "Initiates the tournament phase after entry submission."
+      },
+      {
+        "name": "collectOracleVotes",
+        "function": "Collects votes from registered oracles."
+      },
+      {
+        "name": "determineWinners",
+        "function": "Analyzes oracle votes to determine the winners."
+      },
+      {
+        "name": "distributePrizes",
+        "function": "Distributes prizes to winners based on final results."
+      }
+    ],
+    "events": ["EntrySubmitted", "OracleVoting", "AllVotesSubmitted", "ClaimsMade"]
+}

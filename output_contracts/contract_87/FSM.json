@@ -1,0 +1,116 @@
+{
+    "contractName": "HAYC",
+    "inherited contracts": ["ERC721", "Ownable"],
+    "initialState": "Minting",
+    "states": [
+      {
+        "name": "Minting",
+        "transitions": [
+          {
+            "trigger": "mint(uint256 _mintAmount)",
+            "target": "AwaitingPayment",
+            "action": "processMint"
+          }
+        ]
+      },
+      {
+        "name": "AwaitingPayment",
+        "transitions": [
+          {
+            "trigger": "paymentReceived",
+            "target": "Minting",
+            "action": "finalizeMint"
+          },
+          {
+            "trigger": "priceUpdated",
+            "target": "PriceUpdated",
+            "action": "updatePrice"
+          }
+        ]
+      },
+      {
+        "name": "PriceUpdated",
+        "transitions": [
+          {
+            "trigger": "setBaseURI(string memory _newBaseURI)",
+            "target": "BaseURISet",
+            "action": "updateBaseURI"
+          }
+        ]
+      },
+      {
+        "name": "BaseURISet",
+        "transitions": [
+          {
+            "trigger": "withdraw()",
+            "target": "Withdrawing",
+            "action": "withdrawFunds"
+          }
+        ]
+      },
+      {
+        "name": "Withdrawing",
+        "transitions": [
+          {
+            "trigger": "withdrawalComplete",
+            "target": "Minting",
+            "action": "resetState"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "baseURI",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "maxMintAmount",
+        "type": "uint256",
+        "initialValue": 20
+      },
+      {
+        "name": "maxSupply",
+        "type": "uint256",
+        "initialValue": 10000
+      },
+      {
+        "name": "price",
+        "type": "uint256",
+        "initialValue": 20000000000000000
+      },
+      {
+        "name": "_tokenSupply",
+        "type": "Counters.Counter",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "mint",
+        "function": "Public function to mint new tokens."
+      },
+      {
+        "name": "setPrice",
+        "function": "Allows the owner to set the price for minting."
+      },
+      {
+        "name": "setBaseURI",
+        "function": "Allows the owner to set the base URI for the metadata."
+      },
+      {
+        "name": "withdraw",
+        "function": "Allows the owner to withdraw funds."
+      },
+      {
+        "name": "totalSupply",
+        "function": "Returns the total number of minted tokens."
+      },
+      {
+        "name": "walletOfOwner",
+        "function": "Returns the token IDs owned by a specific address."
+      }
+    ],
+    "events": ["paymentReceived", "priceUpdated", "withdrawalComplete"]
+}

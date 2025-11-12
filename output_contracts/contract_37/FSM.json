@@ -1,0 +1,97 @@
+{
+    "contractName": "LiquidityPoolContract",
+    "inherited contracts": [],
+    "initialState": "Idle",
+    "states": [
+      {
+        "name": "Idle",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Depositing",
+            "action": "actionDeposit"
+          },
+          {
+            "trigger": "EmergencyWithdraw",
+            "target": "Emergency Withdrawal",
+            "action": "actionEmergencyWithdraw"
+          }
+        ]
+      },
+      {
+        "name": "Depositing",
+        "transitions": [
+          {
+            "trigger": "DepositComplete",
+            "target": "Idle",
+            "action": "updateUserInfo"
+          }
+        ]
+      },
+      {
+        "name": "Withdrawing",
+        "transitions": [
+          {
+            "trigger": "Withdraw",
+            "target": "Idle",
+            "action": "actionWithdraw"
+          }
+        ]
+      },
+      {
+        "name": "Emergency Withdrawal",
+        "transitions": [
+          {
+            "trigger": "EmergencyWithdrawalComplete",
+            "target": "Idle",
+            "action": "completeEmergencyWithdraw"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "userInfo",
+        "type": "mapping(address => UserInfo)",
+        "initialValue": {}
+      },
+      {
+        "name": "poolInfo",
+        "type": "PoolInfo",
+        "initialValue": {}
+      },
+      {
+        "name": "totalAllocPoint",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "rewardPerBlock",
+        "type": "uint",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "add",
+        "function": "Adds a new LP token to the pool."
+      },
+      {
+        "name": "set",
+        "function": "Sets the allocation points for a given pool."
+      },
+      {
+        "name": "deposit",
+        "function": "Deposits LP tokens into the pool."
+      },
+      {
+        "name": "withdraw",
+        "function": "Withdraws LP tokens from the pool."
+      },
+      {
+        "name": "massUpdatePools",
+        "function": "Updates all pools."
+      }
+    ],
+    "events": ["Deposit", "Withdraw", "EmergencyWithdraw"]
+}

@@ -1,0 +1,139 @@
+{
+    "contractName": "CRIPToken",
+    "inherited contracts": ["ERC20Interface", "SafeMath"],
+    "initialState": "InitialState",
+    "states": [
+        {
+            "name": "InitialState",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferState",
+                    "action": "executeTransfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "ApproveState",
+                    "action": "executeApprove"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferFromState",
+                    "action": "executeTransferFrom"
+                },
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "ApproveAndCallState",
+                    "action": "executeApproveAndCall"
+                }
+            ]
+        },
+        {
+            "name": "TransferState",
+            "transitions": [
+                {
+                    "trigger": "TransferCompleted",
+                    "target": "InitialState",
+                    "action": "confirmTransfer"
+                }
+            ]
+        },
+        {
+            "name": "ApproveState",
+            "transitions": [
+                {
+                    "trigger": "ApprovalCompleted",
+                    "target": "InitialState",
+                    "action": "confirmApproval"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromState",
+            "transitions": [
+                {
+                    "trigger": "TransferFromCompleted",
+                    "target": "InitialState",
+                    "action": "confirmTransferFrom"
+                }
+            ]
+        },
+        {
+            "name": "ApproveAndCallState",
+            "transitions": [
+                {
+                    "trigger": "ApproveAndCallCompleted",
+                    "target": "InitialState",
+                    "action": "confirmApproveAndCall"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "CRIP"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Criptovision Luqa Token"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 8
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 100000000000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "executeTransfer",
+            "function": "Handles the transfer of tokens from one address to another."
+        },
+        {
+            "name": "executeApprove",
+            "function": "Enables an address to spend a specified number of tokens from the owner's account."
+        },
+        {
+            "name": "executeTransferFrom",
+            "function": "Allows a spender to transfer tokens on behalf of the token owner."
+        },
+        {
+            "name": "executeApproveAndCall",
+            "function": "Approves an address and calls it to proceed with the transaction."
+        },
+        {
+            "name": "confirmTransfer",
+            "function": "Confirms the transfer transaction."
+        },
+        {
+            "name": "confirmApproval",
+            "function": "Confirms the approval transaction."
+        },
+        {
+            "name": "confirmTransferFrom",
+            "function": "Confirms the transferFrom transaction."
+        },
+        {
+            "name": "confirmApproveAndCall",
+            "function": "Confirms the approveAndCall transaction."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

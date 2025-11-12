@@ -1,0 +1,118 @@
+{
+    "contractName": "UniswapERC20",
+    "inherited contracts": ["ERC20"],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "AddLiquidity",
+                    "target": "LiquidityAdded",
+                    "action": "addLiquidity"
+                },
+                {
+                    "trigger": "RemoveLiquidity",
+                    "target": "LiquidityRemoved",
+                    "action": "removeLiquidity"
+                },
+                {
+                    "trigger": "SwapAForB",
+                    "target": "SwappedAForB",
+                    "action": "swapAForB"
+                },
+                {
+                    "trigger": "SwapBForA",
+                    "target": "SwappedBForA",
+                    "action": "swapBForA"
+                }
+            ]
+        },
+        {
+            "name": "LiquidityAdded",
+            "transitions": [
+                {
+                    "trigger": "Complete",
+                    "target": "Idle",
+                    "action": "emit AddLiquidity event"
+                }
+            ]
+        },
+        {
+            "name": "LiquidityRemoved",
+            "transitions": [
+                {
+                    "trigger": "Complete",
+                    "target": "Idle",
+                    "action": "emit RemoveLiquidity event"
+                }
+            ]
+        },
+        {
+            "name": "SwappedAForB",
+            "transitions": [
+                {
+                    "trigger": "Complete",
+                    "target": "Idle",
+                    "action": "emit SwapAForB event"
+                }
+            ]
+        },
+        {
+            "name": "SwappedBForA",
+            "transitions": [
+                {
+                    "trigger": "Complete",
+                    "target": "Idle",
+                    "action": "emit SwapBForA event"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "tokenA",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "tokenB",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "factory",
+            "type": "address",
+            "initialValue": "msg.sender"
+        },
+        {
+            "name": "rentrancyLock",
+            "type": "bool",
+            "initialValue": false
+        }
+    ],
+    "functions": [
+        {
+            "name": "addLiquidity",
+            "function": "The function to add liquidity to the contract."
+        },
+        {
+            "name": "removeLiquidity",
+            "function": "The function to remove liquidity from the contract."
+        },
+        {
+            "name": "swapAForB",
+            "function": "The function to swap token A for token B."
+        },
+        {
+            "name": "swapBForA",
+            "function": "The function to swap token B for token A."
+        }
+    ],
+    "events": [
+        "AddLiquidity",
+        "RemoveLiquidity",
+        "SwapAForB",
+        "SwapBForA"
+    ]
+}

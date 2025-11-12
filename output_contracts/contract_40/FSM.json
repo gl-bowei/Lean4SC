@@ -1,0 +1,74 @@
+{
+    "contractName": "MichaelDogSon",
+    "inherited contracts": [],
+    "initialState": "ActiveTrading",
+    "states": [
+        {
+            "name": "ActiveTrading",
+            "transitions": [
+                {
+                    "trigger": "TransferEvent",
+                    "target": "FeeAdjustment",
+                    "action": "processTransfer",
+                    "condition": "isNotExcluded"
+                }
+            ]
+        },
+        {
+            "name": "FeeAdjustment",
+            "transitions": [
+                {
+                    "trigger": "AdjustFeesEvent",
+                    "target": "ActiveTrading",
+                    "action": "adjustFees"
+                },
+                {
+                    "trigger": "CharityEvent",
+                    "target": "ActiveTrading",
+                    "action": "handleCharityContribution"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 1000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowances",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        },
+        {
+            "name": "feeStructure",
+            "type": "uint256",
+            "initialValue": 5
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Handles token transfers between addresses."
+        },
+        {
+            "name": "approve",
+            "function": "Sets allowance for a spender to use token."
+        },
+        {
+            "name": "swapForETH",
+            "function": "Executes token swap for ETH."
+        },
+        {
+            "name": "distribute",
+            "function": "Distributes fees to charity and liquidity."
+        }
+    ],
+    "events": ["TransferEvent", "AdjustFeesEvent", "CharityEvent", "BlacklistLogEvent"]
+}

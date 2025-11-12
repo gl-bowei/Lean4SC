@@ -1,0 +1,114 @@
+{
+    "contractName": "Eureka",
+    "inherited contracts": ["ERC20Interface"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferCompleted",
+                    "action": "emit Transfer event"
+                },
+                {
+                    "trigger": "Approval",
+                    "target": "ApprovalUpdated",
+                    "action": "emit Approval event"
+                }
+            ]
+        },
+        {
+            "name": "TransferCompleted",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferCompleted",
+                    "action": "emit Transfer event"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalUpdated",
+            "transitions": [
+                {
+                    "trigger": "IncreaseApproval",
+                    "target": "ApprovalUpdated",
+                    "action": "emit Approval event"
+                },
+                {
+                    "trigger": "DecreaseApproval",
+                    "target": "ApprovalUpdated",
+                    "action": "emit Approval event"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "ERK"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Eureka"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 150000000
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "totalSupply",
+            "function": "Returns the total supply of tokens."
+        },
+        {
+            "name": "balanceOf",
+            "function": "Returns the token balance for a given address."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfers tokens from the sender to the specified address."
+        },
+        {
+            "name": "approve",
+            "function": "Allows a spender to transfer tokens on behalf of the owner."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens from one address to another, using allowance."
+        },
+        {
+            "name": "allowance",
+            "function": "Returns the number of tokens that a spender can transfer from the owner's account."
+        },
+        {
+            "name": "increaseApproval",
+            "function": "Increases the allowance granted to a spender."
+        },
+        {
+            "name": "decreaseApproval",
+            "function": "Decreases the allowance granted to a spender."
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

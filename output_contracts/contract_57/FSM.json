@@ -1,0 +1,116 @@
+{
+    "contractName": "CreatureMintingContract",
+    "inherited contracts": [],
+    "initialState": "MintingAvailable",
+    "states": [
+      {
+        "name": "MintingAvailable",
+        "transitions": [
+          {
+            "trigger": "MintSingle",
+            "target": "MintingAvailable",
+            "action": "mintSingle",
+            "condition": "canMintSingle"
+          },
+          {
+            "trigger": "MintNickelPack",
+            "target": "MintingAvailable",
+            "action": "mintNickelPack",
+            "condition": "canMintNickelPack"
+          },
+          {
+            "trigger": "MintDimePack",
+            "target": "MintingAvailable",
+            "action": "mintDimePack",
+            "condition": "canMintDimePack"
+          },
+          {
+            "trigger": "MintDubPack",
+            "target": "MintingAvailable",
+            "action": "mintDubPack",
+            "condition": "canMintDubPack"
+          },
+          {
+            "trigger": "CloseMinting",
+            "target": "MintingClosed",
+            "action": "closeMinting"
+          }
+        ]
+      },
+      {
+        "name": "MintingClosed",
+        "transitions": [
+          {
+            "trigger": "OpenMinting",
+            "target": "MintingAvailable",
+            "action": "openMinting"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "proxyRegistryAddress",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "nftAddress",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "baseURI",
+        "type": "string",
+        "initialValue": ""
+      },
+      {
+        "name": "GENTE_SUPPLY",
+        "type": "uint",
+        "initialValue": 10000
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintSingle",
+        "function": "Mints a single creature."
+      },
+      {
+        "name": "mintNickelPack",
+        "function": "Mints a nickel pack of creatures."
+      },
+      {
+        "name": "mintDimePack",
+        "function": "Mints a dime pack of creatures."
+      },
+      {
+        "name": "mintDubPack",
+        "function": "Mints a dub pack of creatures."
+      },
+      {
+        "name": "canMintSingle",
+        "function": "Checks if a single minting is allowed."
+      },
+      {
+        "name": "canMintNickelPack",
+        "function": "Checks if a nickel pack can be minted."
+      },
+      {
+        "name": "canMintDimePack",
+        "function": "Checks if a dime pack can be minted."
+      },
+      {
+        "name": "canMintDubPack",
+        "function": "Checks if a dub pack can be minted."
+      },
+      {
+        "name": "closeMinting",
+        "function": "Closes the minting process."
+      },
+      {
+        "name": "openMinting",
+        "function": "Opens the minting process."
+      }
+    ],
+    "events": ["Transfer"]
+}

@@ -1,0 +1,140 @@
+{
+    "contractName": "YCQLToken",
+    "inherited contracts": ["PausableToken"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer(address(0x0), msg.sender, _totalTokenAmount)",
+                    "target": "TokensAllocated",
+                    "action": "Assign total tokens to the sender."
+                }
+            ]
+        },
+        {
+            "name": "TokensAllocated",
+            "transitions": [
+                {
+                    "trigger": "transfer(address _to, uint _value)",
+                    "target": "TransferInitiated",
+                    "action": "Initiate transfer of tokens."
+                },
+                {
+                    "trigger": "burn(uint _value)",
+                    "target": "TokensBurned",
+                    "action": "Burn specified amount of tokens."
+                },
+                {
+                    "trigger": "changeAdmin(address newAdmin)",
+                    "target": "AdminChanged",
+                    "action": "Change the admin account."
+                }
+            ]
+        },
+        {
+            "name": "TransferInitiated",
+            "transitions": [
+                {
+                    "trigger": "transferFrom(address _from, address _to, uint _value)",
+                    "target": "TransferFromInitiated",
+                    "action": "Initiate transfer from specified address."
+                }
+            ]
+        },
+        {
+            "name": "TokensBurned",
+            "transitions": [
+                {
+                    "trigger": "Burn(msg.sender, _value)",
+                    "target": "TokensAllocated",
+                    "action": "Return to TokensAllocated state after burning."
+                }
+            ]
+        },
+        {
+            "name": "TransferFromInitiated",
+            "transitions": [
+                {
+                    "trigger": "burnFrom(address _from, uint256 _value)",
+                    "target": "BurnFromInitiated",
+                    "action": "Initiate burn from specified address."
+                }
+            ]
+        },
+        {
+            "name": "BurnFromInitiated",
+            "transitions": [
+                {
+                    "trigger": "emergencyERC20Drain(ERC20 token, uint amount)",
+                    "target": "EmergencyDrain",
+                    "action": "Emergency action to drain tokens."
+                }
+            ]
+        },
+        {
+            "name": "AdminChanged",
+            "transitions": [
+                {
+                    "trigger": "AdminTransferred(address indexed previousAdmin, address indexed newAdmin)",
+                    "target": "TokensAllocated",
+                    "action": "Return to TokensAllocated after admin change."
+                }
+            ]
+        },
+        {
+            "name": "EmergencyDrain",
+            "transitions": [
+                {
+                    "trigger": "transfer(owner, amount)",
+                    "target": "TokensAllocated",
+                    "action": "Return to TokensAllocated after draining."
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "admin",
+            "type": "address",
+            "initialValue": ""
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint",
+            "initialValue": 0
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Transfers tokens to a specified address."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens from a specified address."
+        },
+        {
+            "name": "burn",
+            "function": "Burns a specified amount of tokens."
+        },
+        {
+            "name": "changeAdmin",
+            "function": "Changes the admin of the contract."
+        },
+        {
+            "name": "emergencyERC20Drain",
+            "function": "Drains ERC20 tokens sent to this contract by mistake."
+        }
+    ],
+    "events": [
+        "Burn",
+        "AdminTransferred"
+    ]
+}

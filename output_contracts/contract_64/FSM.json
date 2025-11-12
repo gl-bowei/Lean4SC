@@ -1,0 +1,104 @@
+{
+    "contractName": "HTCC",
+    "inherited contracts": [],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "Transferring",
+                    "action": "processTransfer",
+                    "condition": "validTransfer"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "setApproval",
+                    "condition": "validApproval"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "Burning",
+                    "action": "processBurn",
+                    "condition": "validBurn"
+                }
+            ]
+        },
+        {
+            "name": "Transferring",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransfer",
+                    "target": "Idle",
+                    "action": "finishTransfer"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom",
+                    "target": "Transferring",
+                    "action": "processTransferFrom"
+                }
+            ]
+        },
+        {
+            "name": "Burning",
+            "transitions": [
+                {
+                    "trigger": "CompleteBurn",
+                    "target": "Idle",
+                    "action": "finishBurn"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "processTransfer",
+            "function": "Handles the internal token transfer process."
+        },
+        {
+            "name": "setApproval",
+            "function": "Sets the allowance for a spender."
+        },
+        {
+            "name": "processBurn",
+            "function": "Handles the token burning process."
+        },
+        {
+            "name": "finishTransfer",
+            "function": "Finalizes the token transfer."
+        },
+        {
+            "name": "processTransferFrom",
+            "function": "Handles the transfer from a different address."
+        },
+        {
+            "name": "finishBurn",
+            "function": "Finalizes the token burning."
+        }
+    ],
+    "events": ["Transfer", "Approval", "Burn"]
+}

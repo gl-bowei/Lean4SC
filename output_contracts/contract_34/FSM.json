@@ -1,0 +1,78 @@
+{
+    "contractName": "TeamVestingContract",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+      {
+        "name": "Initialized",
+        "transitions": [
+          {
+            "trigger": "Initialize",
+            "target": "Investors Added",
+            "action": "setInitialTimestamp"
+          }
+        ]
+      },
+      {
+        "name": "Investors Added",
+        "transitions": [
+          {
+            "trigger": "Add Investors",
+            "target": "Investors Added",
+            "action": "addInvestors"
+          },
+          {
+            "trigger": "Release Tokens",
+            "target": "Tokens Released",
+            "action": "releaseTokens"
+          }
+        ]
+      },
+      {
+        "name": "Tokens Released",
+        "transitions": [
+          {
+            "trigger": "Withdraw Tokens",
+            "target": "Tokens Released",
+            "action": "allowWithdraw"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalAllocatedAmount",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "initialTimestamp",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "investorsInfo",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "setInitialTimestamp",
+        "function": "Sets the initial timestamp for the vesting schedule."
+      },
+      {
+        "name": "addInvestors",
+        "function": "Adds investors with their respective token allocations."
+      },
+      {
+        "name": "releaseTokens",
+        "function": "Releases tokens based on the vesting schedule."
+      },
+      {
+        "name": "allowWithdraw",
+        "function": "Allows investors to withdraw their available tokens."
+      }
+    ],
+    "events": ["Investors Added", "Tokens Withdrawn", "Token Recovery"]
+}

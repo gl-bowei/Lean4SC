@@ -1,0 +1,111 @@
+{
+    "contractName": "ChinaInvestmentExchangeToken",
+    "inherited contracts": ["EIP20Interface"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "TransferTokens",
+                    "target": "TransferCompleted",
+                    "action": "transfer",
+                    "condition": "balances[msg.sender] >= _value"
+                },
+                {
+                    "trigger": "ApproveTokens",
+                    "target": "ApprovalCompleted",
+                    "action": "approve"
+                }
+            ]
+        },
+        {
+            "name": "TransferCompleted",
+            "transitions": [
+                {
+                    "trigger": "TransferFromTokens",
+                    "target": "TransferFromCompleted",
+                    "action": "transferFrom"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalCompleted",
+            "transitions": [
+                {
+                    "trigger": "CheckAllowance",
+                    "target": "AllowanceChecked",
+                    "action": "allowance"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromCompleted",
+            "transitions": [
+                {
+                    "trigger": "CheckBalance",
+                    "target": "BalanceChecked",
+                    "action": "balanceOf"
+                }
+            ]
+        },
+        {
+            "name": "BalanceChecked",
+            "transitions": []
+        },
+        {
+            "name": "AllowanceChecked",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "balances",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping (address => uint256))",
+            "initialValue": {}
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 0
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        }
+    ],
+    "functions": [
+        {
+            "name": "transfer",
+            "function": "Transfers tokens to a specified address"
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens on behalf of another address"
+        },
+        {
+            "name": "balanceOf",
+            "function": "Returns the balance of a specified address"
+        },
+        {
+            "name": "approve",
+            "function": "Allows another address to spend a specified amount of tokens"
+        },
+        {
+            "name": "allowance",
+            "function": "Returns the remaining number of tokens that an authorized spender can spend"
+        }
+    ],
+    "events": ["Transfer", "Approval"]
+}

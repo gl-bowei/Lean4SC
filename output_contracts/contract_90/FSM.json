@@ -1,0 +1,120 @@
+{
+    "contractName": "StarCoin",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+      {
+        "name": "Initialized",
+        "transitions": [
+          {
+            "trigger": "Deploy",
+            "target": "Transferring Tokens",
+            "action": "initializeTotalSupply"
+          }
+        ]
+      },
+      {
+        "name": "Transferring Tokens",
+        "transitions": [
+          {
+            "trigger": "TransferTokens",
+            "target": "Transferring Tokens",
+            "action": "transfer"
+          },
+          {
+            "trigger": "ApproveAllowance",
+            "target": "Allowance Management",
+            "action": "approve"
+          }
+        ]
+      },
+      {
+        "name": "Allowance Management",
+        "transitions": [
+          {
+            "trigger": "IncreaseAllowance",
+            "target": "Allowance Management",
+            "action": "increaseAllowance"
+          },
+          {
+            "trigger": "DecreaseAllowance",
+            "target": "Allowance Management",
+            "action": "decreaseAllowance"
+          },
+          {
+            "trigger": "TransferFrom",
+            "target": "Transferring Tokens",
+            "action": "transferFrom"
+          }
+        ]
+      },
+      {
+        "name": "Token Burning",
+        "transitions": [
+          {
+            "trigger": "BurnTokens",
+            "target": "Transferring Tokens",
+            "action": "burn"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "_balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "_totalSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "_name",
+        "type": "string",
+        "initialValue": "Star Coin"
+      },
+      {
+        "name": "_symbol",
+        "type": "string",
+        "initialValue": "SRC"
+      },
+      {
+        "name": "_decimals",
+        "type": "uint",
+        "initialValue": 18
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Transfers tokens between addresses."
+      },
+      {
+        "name": "approve",
+        "function": "Approves a spender to withdraw tokens from the caller's account."
+      },
+      {
+        "name": "transferFrom",
+        "function": "Allows a spender to transfer tokens on behalf of the owner."
+      },
+      {
+        "name": "increaseAllowance",
+        "function": "Increases the allowance for a spender."
+      },
+      {
+        "name": "decreaseAllowance",
+        "function": "Decreases the allowance for a spender."
+      },
+      {
+        "name": "burn",
+        "function": "Burns tokens to reduce the total supply."
+      },
+      {
+        "name": "balanceOf",
+        "function": "Returns the token balance of a specific address."
+      }
+    ],
+    "events": ["Transfer", "Approval"]
+}

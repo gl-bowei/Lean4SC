@@ -1,0 +1,95 @@
+{
+    "contractName": "BitcoinZ",
+    "inherited contracts": ["StandardToken"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "FundTransfer",
+                    "target": "Funded",
+                    "action": "processPayment",
+                    "condition": "msg.value > 0"
+                }
+            ]
+        },
+        {
+            "name": "Funded",
+            "transitions": [
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "Approved",
+                    "action": "approveAndCallAction"
+                },
+                {
+                    "trigger": "NewFundTransfer",
+                    "target": "Funded",
+                    "action": "processPayment"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "Reset",
+                    "target": "Initial",
+                    "action": "resetApproval"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "BitcoinZ"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "BTZ"
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "initialValue": "H1.0"
+        },
+        {
+            "name": "unitsOneEthCanBuy",
+            "type": "uint256",
+            "initialValue": 10000000
+        },
+        {
+            "name": "totalEthInWei",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "fundsWallet",
+            "type": "address",
+            "initialValue": "msg.sender"
+        }
+    ],
+    "functions": [
+        {
+            "name": "processPayment",
+            "function": "Processes the payment from the sender."
+        },
+        {
+            "name": "approveAndCallAction",
+            "function": "Handles the approval and calling of the spending contract."
+        },
+        {
+            "name": "resetApproval",
+            "function": "Resets the approval once action is complete."
+        }
+    ],
+    "events": ["Transfer"]
+}

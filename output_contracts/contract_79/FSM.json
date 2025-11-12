@@ -1,0 +1,78 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "TokenMinting",
+    "states": [
+        {
+            "name": "TokenMinting",
+            "transitions": [
+                {
+                    "trigger": "MintToken",
+                    "target": "TokenMinted",
+                    "action": "mintTokenAction"
+                },
+                {
+                    "trigger": "UpdateBaseURI",
+                    "target": "MetadataManagement",
+                    "action": "setBaseTokenURIAction"
+                }
+            ]
+        },
+        {
+            "name": "TokenMinted",
+            "transitions": [
+                {
+                    "trigger": "RetrieveMetadata",
+                    "target": "MetadataManagement",
+                    "action": "retrieveTokenMetadataAction"
+                }
+            ]
+        },
+        {
+            "name": "MetadataManagement",
+            "transitions": [
+                {
+                    "trigger": "RetrieveMetadata",
+                    "target": "MetadataManagement",
+                    "action": "retrieveTokenMetadataAction"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "baseTokenUri",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        }
+    ],
+    "functions": [
+        {
+            "name": "mintTokenAction",
+            "function": "The function to mint tokens."
+        },
+        {
+            "name": "setBaseTokenURIAction",
+            "function": "The function to set the base URI for token metadata."
+        },
+        {
+            "name": "retrieveTokenMetadataAction",
+            "function": "The function to retrieve the metadata URI for a specific token ID."
+        }
+    ],
+    "events": [
+        "MintToken",
+        "UpdateBaseURI",
+        "RetrieveMetadata"
+    ]
+}

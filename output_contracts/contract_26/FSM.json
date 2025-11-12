@@ -1,0 +1,160 @@
+{
+    "contractName": "LINKRewards",
+    "inherited contracts": ["LPTokenWrapper", "IRewardDistributionRecipient"],
+    "initialState": "InitialState",
+    "states": [
+        {
+            "name": "InitialState",
+            "transitions": [
+                {
+                    "trigger": "StakeEvent",
+                    "target": "StakedState",
+                    "action": "stake",
+                    "condition": "amount > 0"
+                },
+                {
+                    "trigger": "WithdrawEvent",
+                    "target": "WithdrawnState",
+                    "action": "withdraw",
+                    "condition": "amount > 0"
+                },
+                {
+                    "trigger": "GetRewardEvent",
+                    "target": "RewardPaidState",
+                    "action": "getReward"
+                },
+                {
+                    "trigger": "NotifyRewardEvent",
+                    "target": "RewardAddedState",
+                    "action": "notifyRewardAmount"
+                }
+            ]
+        },
+        {
+            "name": "StakedState",
+            "transitions": [
+                {
+                    "trigger": "WithdrawEvent",
+                    "target": "WithdrawnState",
+                    "action": "withdraw"
+                },
+                {
+                    "trigger": "GetRewardEvent",
+                    "target": "RewardPaidState",
+                    "action": "getReward"
+                }
+            ]
+        },
+        {
+            "name": "WithdrawnState",
+            "transitions": [
+                {
+                    "trigger": "GetRewardEvent",
+                    "target": "RewardPaidState",
+                    "action": "getReward"
+                }
+            ]
+        },
+        {
+            "name": "RewardPaidState",
+            "transitions": [
+                {
+                    "trigger": "StakeEvent",
+                    "target": "StakedState",
+                    "action": "stake"
+                },
+                {
+                    "trigger": "WithdrawEvent",
+                    "target": "WithdrawnState",
+                    "action": "withdraw"
+                }
+            ]
+        },
+        {
+            "name": "RewardAddedState",
+            "transitions": [
+                {
+                    "trigger": "StakeEvent",
+                    "target": "StakedState",
+                    "action": "stake"
+                },
+                {
+                    "trigger": "WithdrawEvent",
+                    "target": "WithdrawnState",
+                    "action": "withdraw"
+                },
+                {
+                    "trigger": "GetRewardEvent",
+                    "target": "RewardPaidState",
+                    "action": "getReward"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "yfi",
+            "type": "IERC20",
+            "initialValue": "0x7838C886C7F4431848CC0e8e07e7C59fACB154dF"
+        },
+        {
+            "name": "DURATION",
+            "type": "uint256",
+            "initialValue": "256 hours"
+        },
+        {
+            "name": "periodFinish",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "rewardRate",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "lastUpdateTime",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "rewardPerTokenStored",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "userRewardPerTokenPaid",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "rewards",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "stake",
+            "function": "The function to stake a specified amount."
+        },
+        {
+            "name": "withdraw",
+            "function": "The function to withdraw a specified amount."
+        },
+        {
+            "name": "getReward",
+            "function": "The function to claim rewards."
+        },
+        {
+            "name": "notifyRewardAmount",
+            "function": "The function to notify new reward amounts."
+        }
+    ],
+    "events": [
+        "RewardAdded",
+        "Staked",
+        "Withdrawn",
+        "RewardPaid"
+    ]
+}

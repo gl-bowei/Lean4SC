@@ -1,0 +1,106 @@
+{
+    "contractName": "WithdrawalContract",
+    "inherited contracts": [],
+    "initialState": "WhitelistingPhase",
+    "states": [
+      {
+        "name": "WhitelistingPhase",
+        "transitions": [
+          {
+            "trigger": "WhitelistAddress",
+            "target": "WhitelistingPhase",
+            "action": "manageWhitelist"
+          },
+          {
+            "trigger": "StartWithdrawal",
+            "target": "WithdrawalPhase",
+            "action": "enableWithdrawals"
+          }
+        ]
+      },
+      {
+        "name": "WithdrawalPhase",
+        "transitions": [
+          {
+            "trigger": "WithdrawTokens",
+            "target": "WithdrawalPhase",
+            "action": "processWithdrawal",
+            "condition": "checkBalance"
+          },
+          {
+            "trigger": "UpdateCapStatus",
+            "target": "CapReached",
+            "action": "checkCap"
+          }
+        ]
+      },
+      {
+        "name": "CapReached",
+        "transitions": [
+          {
+            "trigger": "WithdrawTokens",
+            "target": "CapReached",
+            "action": "denyWithdrawal"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "token_contract",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "admin",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "withdraw_value",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "capReached",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "withdrawed_addresses",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "manageWhitelist",
+        "function": "Adds or removes addresses to/from the whitelist."
+      },
+      {
+        "name": "processWithdrawal",
+        "function": "Processes the withdrawal for a user based on whitelist status."
+      },
+      {
+        "name": "checkBalance",
+        "function": "Checks the user's token balance before allowing withdrawal."
+      },
+      {
+        "name": "enableWithdrawals",
+        "function": "Enables the withdrawal phase for whitelisted addresses."
+      },
+      {
+        "name": "checkCap",
+        "function": "Updates the capReached status based on withdrawals."
+      },
+      {
+        "name": "denyWithdrawal",
+        "function": "Denies any further withdrawals if the cap is reached."
+      }
+    ],
+    "events": [
+      "AddressWhitelisted",
+      "WithdrawalSuccessful",
+      "CapStatusUpdated"
+    ]
+}

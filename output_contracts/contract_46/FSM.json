@@ -1,0 +1,168 @@
+{
+    "contractName": "WtaERC20",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer",
+                    "target": "TransferInProgress",
+                    "action": "_transfer"
+                },
+                {
+                    "trigger": "TransferFrom",
+                    "target": "TransferFromInProgress",
+                    "action": "transferFrom"
+                },
+                {
+                    "trigger": "Approve",
+                    "target": "Approved",
+                    "action": "approve"
+                },
+                {
+                    "trigger": "ApproveAndCall",
+                    "target": "ApprovedAndCalled",
+                    "action": "approveAndCall"
+                },
+                {
+                    "trigger": "Burn",
+                    "target": "BurnInProgress",
+                    "action": "burn"
+                },
+                {
+                    "trigger": "BurnFrom",
+                    "target": "BurnFromInProgress",
+                    "action": "burnFrom"
+                }
+            ]
+        },
+        {
+            "name": "TransferInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransfer",
+                    "target": "Initialized",
+                    "action": "emit Transfer"
+                }
+            ]
+        },
+        {
+            "name": "TransferFromInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteTransferFrom",
+                    "target": "Initialized",
+                    "action": "emit Transfer"
+                }
+            ]
+        },
+        {
+            "name": "Approved",
+            "transitions": [
+                {
+                    "trigger": "CompleteApproval",
+                    "target": "Initialized",
+                    "action": "emit Approval"
+                }
+            ]
+        },
+        {
+            "name": "ApprovedAndCalled",
+            "transitions": [
+                {
+                    "trigger": "CompleteApprovalAndCall",
+                    "target": "Initialized",
+                    "action": "emit Approval"
+                }
+            ]
+        },
+        {
+            "name": "BurnInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteBurn",
+                    "target": "Initialized",
+                    "action": "emit Burn"
+                }
+            ]
+        },
+        {
+            "name": "BurnFromInProgress",
+            "transitions": [
+                {
+                    "trigger": "CompleteBurnFrom",
+                    "target": "Initialized",
+                    "action": "emit Burn"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": ""
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "_transfer",
+            "function": "Internal transfer function."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfer tokens to a specified address."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfer tokens from one address to another."
+        },
+        {
+            "name": "approve",
+            "function": "Set allowance for another address."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Set allowance and notify the approved contract."
+        },
+        {
+            "name": "burn",
+            "function": "Destroy tokens from the sender's account."
+        },
+        {
+            "name": "burnFrom",
+            "function": "Destroy tokens from another account."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Burn"
+    ]
+}

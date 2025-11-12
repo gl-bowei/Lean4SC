@@ -1,0 +1,115 @@
+{
+    "contractName": "StakingLPRewardFixedAPY",
+    "inherited contracts": ["IStakingRewards", "ReentrancyGuard", "Ownable"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "stake(uint256 amount)",
+                    "target": "Staked",
+                    "action": "_stake(amount, msg.sender)"
+                },
+                {
+                    "trigger": "stakeWithPermit(uint256 amount, uint deadline, uint8 v, bytes32 r, bytes32 s)",
+                    "target": "Staked",
+                    "action": "_stake(amount, msg.sender)"
+                },
+                {
+                    "trigger": "stakeFor(uint256 amount, address user)",
+                    "target": "Staked",
+                    "action": "_stake(amount, user)"
+                }
+            ]
+        },
+        {
+            "name": "Staked",
+            "transitions": [
+                {
+                    "trigger": "withdraw(uint256 nonce)",
+                    "target": "Withdrawn",
+                    "action": "Withdraw user's stake"
+                },
+                {
+                    "trigger": "getReward()",
+                    "target": "RewardPaid",
+                    "action": "Calculate and transfer rewards"
+                },
+                {
+                    "trigger": "withdrawAndGetReward(uint256 nonce)",
+                    "target": "Withdrawn",
+                    "action": "Withdraw and get reward"
+                }
+            ]
+        },
+        {
+            "name": "Withdrawn",
+            "transitions": [
+                {
+                    "trigger": "stake(uint256 amount)",
+                    "target": "Staked",
+                    "action": "_stake(amount, msg.sender)"
+                }
+            ]
+        },
+        {
+            "name": "RewardPaid",
+            "transitions": [
+                {
+                    "trigger": "stake(uint256 amount)",
+                    "target": "Staked",
+                    "action": "_stake(amount, msg.sender)"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "rewardRate",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "_totalSupplyRewardEquivalent",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "weightedStakeDate",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "_stake",
+            "function": "Handles the logic for staking an amount."
+        },
+        {
+            "name": "getReward",
+            "function": "Calculates and transfers the earned rewards."
+        },
+        {
+            "name": "withdraw",
+            "function": "Allows a user to withdraw their staked tokens."
+        },
+        {
+            "name": "withdrawAndGetReward",
+            "function": "Withdraws staked tokens and gets rewards."
+        }
+    ],
+    "events": [
+        "RewardUpdated",
+        "Staked",
+        "Withdrawn",
+        "RewardPaid",
+        "Rescue",
+        "RescueToken"
+    ]
+}

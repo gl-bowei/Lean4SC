@@ -1,0 +1,100 @@
+Contract: KikiInuToken (KIKI)
+Specification: Two-Stage Taxable Token (based on requirement.txt)
+
+--- FSM 元组 <S, s0, C, I, O, -> ---
+
+S (有限状态集):
+  { PreLiquidity, ActiveTrading }
+  (此 FSM 状态由合约变量 'tradingIsEnabled' (C) 表示)
+  - PreLiquidity  := (tradingIsEnabled == false)
+  - ActiveTrading := (tradingIsEnabled == true)
+
+s0 (初始状态):
+  PreLiquidity
+  (构造函数设置 'tradingIsEnabled = false')
+
+C (合约变量):
+  - owner: Address 
+  - totalSupply: UInt
+  - balances: Mapping[Address -> UInt] 
+  - allowances: Mapping[Address -> Mapping[Address -> UInt]] 
+  - tradingIsEnabled: Bool (代表 FSM 状态)
+  - taxFeePercent: UInt (属于 "fee structures" )
+  - liquidityFeePercent: UInt (属于 "fee structures" )
+  - minTokensBeforeSwap: UInt (属于 "liquidity management" )
+  - isSniper: Mapping[Address -> Bool] (用于 "protections against sniping" )
+
+I (输入变量):
+  - msg.sender: Address
+  - from: Address
+  - to: Address
+  - spender: Address
+  - amount: UInt
+
+O (输出/事件):
+  - Transfer (ERC20 标准)
+  - Approval (ERC20 标准)
+  - OwnershipTransferred 
+  - MinTokensBeforeSwapUpdated 
+  - SwapAndLiquify 
+  - SniperCaught 
+
+--- 转换关系 (->) ---
+
+1. 转换: enableTrading()
+   - 路径: (PreLiquidity) -> (ActiveTrading)
+   - 触发器: enableTrading() (对应 "enabling trading features" )
+   - G_1 (守卫): msg.sender == C.owner
+   - F_1 (动作): { C.tradingIsEnabled := true; }
+
+2. 转换: transfer() (在 PreLiquidity 状态下)
+   - 路径: (PreLiquidity) -> (PreLiquidity) [自循环]
+   - 触发器: transfer(to, amount) 
+   - G_2 (守卫): (C.tradingIsEnabled == false) AND (msg.sender == C.owner)
+     (此守卫是 "mitigations... during the liquidity addition phase" )
+   - F_2 (动作): {
+       C.balances[msg.sender] -= amount;
+       C.balances[to] += amount;
+       emit Transfer(msg.sender, to, amount);
+     }
+     (注意: 此状态下无税费)
+
+3. 转换: transfer() (在 ActiveTrading 状态下)
+   - 路径: (ActiveTrading) -> (ActiveTrading) [自循环]
+   - 触发器: transfer(to, amount) 
+   - G_3 (守卫): (C.tradingIsEnabled == true) AND (!C.isSniper[msg.sender])
+     (此守卫是 "protections against sniping" )
+   - F_3 (动作): {
+       // 检查是否触发 'swap liquidity' 
+       if (C.balances[contract] >= C.minTokensBeforeSwap) then
+         call F_SWAP(); // F_SWAP 对应 'SwapAndLiquify' 动作
+       
+       // 计算税费
+       tax_amount := amount * C.taxFeePercent / 100;
+       liq_amount := amount * C.liquidityFeePercent / 100;
+       transfer_amount := amount - tax_amount - liq_amount;
+       
+       // 执行转账
+       C.balances[msg.sender] -= amount;
+       C.balances[to] += transfer_amount;
+       C.balances[contract] += (tax_amount + liq_amount);
+       emit Transfer(msg.sender, to, transfer_amount);
+     }
+
+4. 转换: setTaxes()
+   - 路径: (任意状态) -> (任意状态)
+   - 触发器: setTaxes(newTax, newLiq) 
+   - G_4 (守卫): msg.sender == C.owner
+   - F_4 (动作): { C.taxFeePercent := newTax; C.liquidityFeePercent := newLiq; }
+
+5. 转换: catchSniper()
+   - 路径: (任意状态) -> (任意状态)
+   - 触发器: catchSniper(sniperAddress)
+   - G_5 (守卫): msg.sender == C.owner
+   - F_5 (动作): { C.isSniper[sniperAddress] := true; emit SniperCaught(sniperAddress); }
+
+6. 转换: approve()
+   - 路径: (任意状态) -> (任意状态)
+   - 触发器: approve(spender, amount) 
+   - G_6 (守卫): true (通常无守卫)
+   - F_6 (动作): { C.allowances[msg.sender][spender] := amount; emit Approval(...); }

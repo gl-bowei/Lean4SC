@@ -1,0 +1,110 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": ["ERC20"],
+    "initialState": "Initialization",
+    "states": [
+      {
+        "name": "Initialization",
+        "transitions": [
+          {
+            "trigger": "TokenMinted",
+            "target": "BuyingPhase",
+            "action": "initializeTokenSupply"
+          }
+        ]
+      },
+      {
+        "name": "BuyingPhase",
+        "transitions": [
+          {
+            "trigger": "EtherSent",
+            "target": "BuyingPhase",
+            "action": "calculateTokenAmount",
+            "condition": "investmentValue > 0"
+          },
+          {
+            "trigger": "TokenBought",
+            "target": "BuyingPhase",
+            "action": "updateBalances"
+          },
+          {
+            "trigger": "StartSelling",
+            "target": "SellingPhase",
+            "action": "prepareForSelling"
+          }
+        ]
+      },
+      {
+        "name": "SellingPhase",
+        "transitions": [
+          {
+            "trigger": "TokenSold",
+            "target": "SellingPhase",
+            "action": "refundEther"
+          },
+          {
+            "trigger": "EndSelling",
+            "target": "BuyingPhase",
+            "action": "resetForBuying"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "totalSupply",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "allowed",
+        "type": "mapping(address => mapping(address => uint))",
+        "initialValue": {}
+      },
+      {
+        "name": "investmentPaths",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Transfers tokens from sender to recipient."
+      },
+      {
+        "name": "transferFrom",
+        "function": "Transfers tokens from one account to another using allowances."
+      },
+      {
+        "name": "approve",
+        "function": "Allows another account to spend tokens on behalf of the sender."
+      },
+      {
+        "name": "mintToken",
+        "function": "Mints new tokens and increases total supply."
+      },
+      {
+        "name": "buy",
+        "function": "Allows users to buy tokens with Ether."
+      },
+      {
+        "name": "invest",
+        "function": "Records the investment made by the user."
+      },
+      {
+        "name": "sell",
+        "function": "Allows users to sell tokens back to the contract."
+      }
+    ],
+    "events": [
+      "Transfer",
+      "Approval",
+      "Burned"
+    ]
+}

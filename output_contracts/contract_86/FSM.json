@@ -1,0 +1,92 @@
+{
+    "contractName": "TokenContract",
+    "inherited contracts": [],
+    "initialState": "Paused",
+    "states": [
+      {
+        "name": "Paused",
+        "transitions": [
+          {
+            "trigger": "openTrading",
+            "target": "TradingNotEnabled",
+            "action": "setFees"
+          }
+        ]
+      },
+      {
+        "name": "TradingNotEnabled",
+        "transitions": [
+          {
+            "trigger": "enableTrading",
+            "target": "TradingEnabled",
+            "action": "initializeTrading"
+          }
+        ]
+      },
+      {
+        "name": "TradingEnabled",
+        "transitions": [
+          {
+            "trigger": "transferTokens",
+            "target": "TradingEnabled",
+            "action": "handleTransfer"
+          },
+          {
+            "trigger": "manageLiquidity",
+            "target": "TradingEnabled",
+            "action": "provideLiquidity"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "totalSupply",
+        "type": "uint",
+        "initialValue": 1000000
+      },
+      {
+        "name": "ownerBalances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "taxFees",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "devFees",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "liquidityManagement",
+        "type": "bool",
+        "initialValue": false
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Function to transfer tokens between addresses."
+      },
+      {
+        "name": "approve",
+        "function": "Function to approve tokens for spending by another address."
+      },
+      {
+        "name": "openTrading",
+        "function": "Function to open trading by setting fees and enabling transactions."
+      },
+      {
+        "name": "manageFees",
+        "function": "Function to manage tax and dev fees."
+      }
+    ],
+    "events": [
+      "transfer",
+      "approval",
+      "liquiditySwap"
+    ]
+}

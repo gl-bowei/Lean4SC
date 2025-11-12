@@ -1,0 +1,142 @@
+{
+    "contractName": "DWGT",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "Transfer event emitted",
+                    "target": "TokenIssued",
+                    "action": "Initialize token supply"
+                }
+            ]
+        },
+        {
+            "name": "TokenIssued",
+            "transitions": [
+                {
+                    "trigger": "Transfer call",
+                    "target": "TransferCompleted",
+                    "action": "Execute transfer"
+                },
+                {
+                    "trigger": "Approve call",
+                    "target": "ApprovalSet",
+                    "action": "Set approval for spender"
+                },
+                {
+                    "trigger": "TransferFrom call",
+                    "target": "TransferCompleted",
+                    "action": "Execute transfer from"
+                },
+                {
+                    "trigger": "ApproveAndCall call",
+                    "target": "ApprovalAndCallExecuted",
+                    "action": "Set approval and call receiver"
+                }
+            ]
+        },
+        {
+            "name": "TransferCompleted",
+            "transitions": [
+                {
+                    "trigger": "Next transfer call",
+                    "target": "TokenIssued",
+                    "action": "Prepare for next transfer"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalSet",
+            "transitions": [
+                {
+                    "trigger": "TransferFrom call",
+                    "target": "TransferCompleted",
+                    "action": "Execute transfer from"
+                }
+            ]
+        },
+        {
+            "name": "ApprovalAndCallExecuted",
+            "transitions": [
+                {
+                    "trigger": "Transfer call",
+                    "target": "TransferCompleted",
+                    "action": "Execute transfer"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "DWGT"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "Deep Web Gallery Token"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 18
+        },
+        {
+            "name": "_totalSupply",
+            "type": "uint",
+            "initialValue": 13131313131e18
+        },
+        {
+            "name": "balances",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowed",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "totalSupply",
+            "function": "Returns the total supply of tokens."
+        },
+        {
+            "name": "balanceOf",
+            "function": "Returns the token balance for a specified address."
+        },
+        {
+            "name": "transfer",
+            "function": "Transfers tokens to a specified address."
+        },
+        {
+            "name": "approve",
+            "function": "Approves a spender to transfer a specified amount of tokens."
+        },
+        {
+            "name": "transferFrom",
+            "function": "Transfers tokens from one address to another using an allowance."
+        },
+        {
+            "name": "allowance",
+            "function": "Returns the remaining amount of tokens that a spender is allowed to transfer."
+        },
+        {
+            "name": "approveAndCall",
+            "function": "Approves a spender and calls their receiveApproval function."
+        },
+        {
+            "name": "transferAnyERC20Token",
+            "function": "Allows the owner to transfer any accidentally sent ERC20 tokens."
+        }
+    ],
+    "events": [
+        "Transfer",
+        "Approval"
+    ]
+}

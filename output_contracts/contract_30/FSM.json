@@ -1,0 +1,162 @@
+{
+    "contractName": "PEX",
+    "inherited contracts": ["SafeMath", "Agent"],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "DepositEther",
+                    "target": "Deposited",
+                    "action": "deposit"
+                },
+                {
+                    "trigger": "DepositToken",
+                    "target": "TokenDeposited",
+                    "action": "depositToken"
+                },
+                {
+                    "trigger": "WithdrawToken",
+                    "target": "TokenWithdrawn",
+                    "action": "withdrawToken"
+                },
+                {
+                    "trigger": "CreateOrder",
+                    "target": "OrderCreated",
+                    "action": "order"
+                }
+            ]
+        },
+        {
+            "name": "Deposited",
+            "transitions": [
+                {
+                    "trigger": "WithdrawEther",
+                    "target": "Idle",
+                    "action": "withdraw"
+                }
+            ]
+        },
+        {
+            "name": "TokenDeposited",
+            "transitions": [
+                {
+                    "trigger": "WithdrawToken",
+                    "target": "Idle",
+                    "action": "withdrawToken"
+                }
+            ]
+        },
+        {
+            "name": "TokenWithdrawn",
+            "transitions": [
+                {
+                    "trigger": "DepositToken",
+                    "target": "TokenDeposited",
+                    "action": "depositToken"
+                }
+            ]
+        },
+        {
+            "name": "OrderCreated",
+            "transitions": [
+                {
+                    "trigger": "Trade",
+                    "target": "Traded",
+                    "action": "trade"
+                },
+                {
+                    "trigger": "CancelOrder",
+                    "target": "Idle",
+                    "action": "cancelOrder"
+                }
+            ]
+        },
+        {
+            "name": "Traded",
+            "transitions": [
+                {
+                    "trigger": "CreateOrder",
+                    "target": "OrderCreated",
+                    "action": "order"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "feeAccount",
+            "type": "address",
+            "initialValue": "0"
+        },
+        {
+            "name": "tokens",
+            "type": "mapping(address => mapping(address => uint))",
+            "initialValue": {}
+        },
+        {
+            "name": "orders",
+            "type": "mapping(address => mapping(bytes32 => bool))",
+            "initialValue": {}
+        },
+        {
+            "name": "orderFills",
+            "type": "mapping(address => mapping(bytes32 => uint))",
+            "initialValue": {}
+        },
+        {
+            "name": "whitelistTokens",
+            "type": "mapping(address => whitelistToken)",
+            "initialValue": {}
+        },
+        {
+            "name": "accountTypes",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "feeTypes",
+            "type": "mapping(uint256 => Fee)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "deposit",
+            "function": "Make a deposit of ETH."
+        },
+        {
+            "name": "withdraw",
+            "function": "Withdraw ETH."
+        },
+        {
+            "name": "depositToken",
+            "function": "Make a deposit of tokens."
+        },
+        {
+            "name": "withdrawToken",
+            "function": "Withdraw tokens."
+        },
+        {
+            "name": "order",
+            "function": "Create an order."
+        },
+        {
+            "name": "trade",
+            "function": "Execute a trade."
+        },
+        {
+            "name": "cancelOrder",
+            "function": "Cancel an existing order."
+        }
+    ],
+    "events": [
+        "Deposit",
+        "Withdraw",
+        "Order",
+        "Cancel",
+        "Trade",
+        "WhitelistTokens"
+    ]
+}

@@ -1,0 +1,104 @@
+{
+    "contractName": "MRHcoin",
+    "inherited contracts": [],
+    "initialState": "Initialized",
+    "states": [
+        {
+            "name": "Initialized",
+            "transitions": [
+                {
+                    "trigger": "CreateToken",
+                    "target": "TokenCreated",
+                    "action": "SetInitialSupply"
+                }
+            ]
+        },
+        {
+            "name": "TokenCreated",
+            "transitions": [
+                {
+                    "trigger": "TransferRequest",
+                    "target": "TransferInProgress",
+                    "action": "InitiateTransfer",
+                    "condition": "hasSufficientBalance"
+                }
+            ]
+        },
+        {
+            "name": "TransferInProgress",
+            "transitions": [
+                {
+                    "trigger": "TransferSuccess",
+                    "target": "TokenCreated",
+                    "action": "CompleteTransfer"
+                },
+                {
+                    "trigger": "TransferFailure",
+                    "target": "TokenCreated",
+                    "action": "HandleTransferError"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "standard",
+            "type": "string",
+            "initialValue": "Token 0.1"
+        },
+        {
+            "name": "name",
+            "type": "string",
+            "initialValue": "MRHcoin"
+        },
+        {
+            "name": "symbol",
+            "type": "string",
+            "initialValue": "M"
+        },
+        {
+            "name": "decimals",
+            "type": "uint8",
+            "initialValue": 0
+        },
+        {
+            "name": "initialSupply",
+            "type": "uint256",
+            "initialValue": 1000000
+        },
+        {
+            "name": "totalSupply",
+            "type": "uint256",
+            "initialValue": 1000000
+        },
+        {
+            "name": "balanceOf",
+            "type": "mapping(address => uint256)",
+            "initialValue": {}
+        },
+        {
+            "name": "allowance",
+            "type": "mapping(address => mapping(address => uint256))",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "SetInitialSupply",
+            "function": "Initialize the token supply."
+        },
+        {
+            "name": "InitiateTransfer",
+            "function": "Prepare to transfer tokens."
+        },
+        {
+            "name": "CompleteTransfer",
+            "function": "Finalize the transfer of tokens."
+        },
+        {
+            "name": "HandleTransferError",
+            "function": "Handle errors during token transfer."
+        }
+    ],
+    "events": ["CreateToken", "TransferRequest", "TransferSuccess", "TransferFailure"]
+}

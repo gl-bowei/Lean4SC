@@ -1,0 +1,95 @@
+{
+    "contractName": "BalanceManagementContract",
+    "inherited contracts": [],
+    "initialState": "Active",
+    "states": [
+      {
+        "name": "Active",
+        "transitions": [
+          {
+            "trigger": "Deposit",
+            "target": "Updating Balance",
+            "action": "deposit",
+            "condition": "user deposits funds"
+          },
+          {
+            "trigger": "Withdraw",
+            "target": "Withdrawals",
+            "action": "withdraw",
+            "condition": "user requests withdrawal after 1 hour"
+          }
+        ]
+      },
+      {
+        "name": "Updating Balance",
+        "transitions": [
+          {
+            "trigger": "BalanceUpdated",
+            "target": "Active",
+            "action": "updateBalance"
+          }
+        ]
+      },
+      {
+        "name": "Withdrawals",
+        "transitions": [
+          {
+            "trigger": "WithdrawComplete",
+            "target": "Active",
+            "action": "finalizeWithdrawal"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "devWallet",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "referrers",
+        "type": "mapping(address => address)",
+        "initialValue": {}
+      },
+      {
+        "name": "devPercent",
+        "type": "uint",
+        "initialValue": 10
+      },
+      {
+        "name": "refPercent",
+        "type": "uint",
+        "initialValue": 5
+      },
+      {
+        "name": "govPercent",
+        "type": "uint",
+        "initialValue": 15
+      }
+    ],
+    "functions": [
+      {
+        "name": "deposit",
+        "function": "Handles the fund deposit and updates user's balance."
+      },
+      {
+        "name": "withdraw",
+        "function": "Handles the fund withdrawal process based on elapsed time."
+      },
+      {
+        "name": "updateBalance",
+        "function": "Updates the balances periodically."
+      },
+      {
+        "name": "changePrice",
+        "function": "Changes the pricing per second for calculations."
+      }
+    ],
+    "events": ["Deposit", "Withdraw", "ReferralAdded", "PriceChange"]
+}

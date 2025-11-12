@@ -1,0 +1,107 @@
+{
+    "contractName": "NFTMintingContract",
+    "inherited contracts": [],
+    "initialState": "Sale Open",
+    "states": [
+      {
+        "name": "Sale Open",
+        "transitions": [
+          {
+            "trigger": "Mint",
+            "target": "Sale Open",
+            "action": "mintTokens",
+            "condition": "checkMintLimit"
+          },
+          {
+            "trigger": "PauseSale",
+            "target": "Sale Paused",
+            "action": "pauseSale"
+          },
+          {
+            "trigger": "RevealSale",
+            "target": "Sale Revealed",
+            "action": "revealSale",
+            "condition": "isRevealTime"
+          }
+        ]
+      },
+      {
+        "name": "Sale Paused",
+        "transitions": [
+          {
+            "trigger": "ResumeSale",
+            "target": "Sale Open",
+            "action": "resumeSale"
+          },
+          {
+            "trigger": "WithdrawFunds",
+            "target": "Sale Paused",
+            "action": "withdrawAll"
+          }
+        ]
+      },
+      {
+        "name": "Sale Revealed",
+        "transitions": [
+          {
+            "trigger": "WithdrawFunds",
+            "target": "Sale Revealed",
+            "action": "withdrawAll"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "MAX_ELEMENTS",
+        "type": "uint",
+        "initialValue": 1000
+      },
+      {
+        "name": "PRICE",
+        "type": "uint",
+        "initialValue": 0.05
+      },
+      {
+        "name": "SOLD_OUT_ELEMENTS",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "baseTokenURI",
+        "type": "string",
+        "initialValue": ""
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintTokens",
+        "function": "The function to mint tokens during sale."
+      },
+      {
+        "name": "presaleMint",
+        "function": "The function to mint tokens during presale."
+      },
+      {
+        "name": "setBaseURI",
+        "function": "The function to set the base URI for tokens."
+      },
+      {
+        "name": "withdrawAll",
+        "function": "The function to withdraw all funds to the owner."
+      },
+      {
+        "name": "pauseSale",
+        "function": "The function to pause the sale."
+      },
+      {
+        "name": "resumeSale",
+        "function": "The function to resume the sale."
+      },
+      {
+        "name": "revealSale",
+        "function": "The function to reveal the sale."
+      }
+    ],
+    "events": ["CreateAircoinsMetaverse"]
+}

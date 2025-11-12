@@ -1,0 +1,145 @@
+{
+    "contractName": "CoFiXV2Controller",
+    "inherited contracts": ["ICoFiXV2Controller"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "setGovernance",
+                    "target": "GovernanceSet",
+                    "action": "Set new governance address"
+                },
+                {
+                    "trigger": "setTimespan",
+                    "target": "TimespanSet",
+                    "action": "Update timespan"
+                },
+                {
+                    "trigger": "addCaller",
+                    "target": "CallerAdded",
+                    "action": "Add allowed caller"
+                },
+                {
+                    "trigger": "setCGamma",
+                    "target": "CGammaSet",
+                    "action": "Set CGamma value"
+                },
+                {
+                    "trigger": "queryOracle",
+                    "target": "OracleQueried",
+                    "action": "Query oracle for prices"
+                }
+            ]
+        },
+        {
+            "name": "GovernanceSet",
+            "transitions": [
+                {
+                    "trigger": "setTimespan",
+                    "target": "TimespanSet",
+                    "action": "Update timespan"
+                }
+            ]
+        },
+        {
+            "name": "TimespanSet",
+            "transitions": [
+                {
+                    "trigger": "addCaller",
+                    "target": "CallerAdded",
+                    "action": "Add allowed caller"
+                },
+                {
+                    "trigger": "setCGamma",
+                    "target": "CGammaSet",
+                    "action": "Set CGamma value"
+                }
+            ]
+        },
+        {
+            "name": "CallerAdded",
+            "transitions": [
+                {
+                    "trigger": "setCGamma",
+                    "target": "CGammaSet",
+                    "action": "Set CGamma value"
+                },
+                {
+                    "trigger": "queryOracle",
+                    "target": "OracleQueried",
+                    "action": "Query oracle for prices"
+                }
+            ]
+        },
+        {
+            "name": "CGammaSet",
+            "transitions": [
+                {
+                    "trigger": "queryOracle",
+                    "target": "OracleQueried",
+                    "action": "Query oracle for prices"
+                }
+            ]
+        },
+        {
+            "name": "OracleQueried",
+            "transitions": [
+                {
+                    "trigger": "setGovernance",
+                    "target": "GovernanceSet",
+                    "action": "Set new governance address"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "governance",
+            "type": "address",
+            "initialValue": "msg.sender"
+        },
+        {
+            "name": "timespan",
+            "type": "uint256",
+            "initialValue": 14
+        },
+        {
+            "name": "CGammaMap",
+            "type": "mapping(address => uint32)",
+            "initialValue": {}
+        },
+        {
+            "name": "callerAllowed",
+            "type": "mapping(address => bool)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "setGovernance",
+            "function": "Update the governance address"
+        },
+        {
+            "name": "setTimespan",
+            "function": "Set the timespan for using oracle prices"
+        },
+        {
+            "name": "addCaller",
+            "function": "Add a new caller to the allowed list"
+        },
+        {
+            "name": "setCGamma",
+            "function": "Set CGamma for a token"
+        },
+        {
+            "name": "queryOracle",
+            "function": "Query the oracle for latest prices"
+        }
+    ],
+    "events": [
+        "NewTimespan",
+        "NewCGamma"
+    ]
+}

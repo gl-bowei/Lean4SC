@@ -1,0 +1,185 @@
+{
+    "contractName": "EOSPlusToken",
+    "inherited contracts": ["ERC20Interface", "Owned", "SafeMath"],
+    "initialState": "Initialized",
+    "states": [
+      {
+        "name": "Initialized",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "TokenTransferred",
+            "action": "transferTokens"
+          },
+          {
+            "trigger": "TransferBatch",
+            "target": "TokensBatchTransferred",
+            "action": "transferTokensBatch"
+          },
+          {
+            "trigger": "Approve",
+            "target": "TokensApproved",
+            "action": "approveTokens"
+          },
+          {
+            "trigger": "TransferFrom",
+            "target": "TokensTransferredFrom",
+            "action": "transferTokensFrom"
+          },
+          {
+            "trigger": "ApproveAndCall",
+            "target": "TokensApprovedAndCalled",
+            "action": "approveAndCallTokens"
+          },
+          {
+            "trigger": "SetName",
+            "target": "NameSet",
+            "action": "setTokenName"
+          },
+          {
+            "trigger": "SetSymbol",
+            "target": "SymbolSet",
+            "action": "setTokenSymbol"
+          },
+          {
+            "trigger": "TransferAnyERC20Token",
+            "target": "TokensTransferredOut",
+            "action": "transferAnyERC20Tokens"
+          }
+        ]
+      },
+      {
+        "name": "TokenTransferred",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "TokenTransferred",
+            "action": "transferTokens"
+          }
+        ]
+      },
+      {
+        "name": "TokensBatchTransferred",
+        "transitions": [
+          {
+            "trigger": "TransferBatch",
+            "target": "TokensBatchTransferred",
+            "action": "transferTokensBatch"
+          }
+        ]
+      },
+      {
+        "name": "TokensApproved",
+        "transitions": [
+          {
+            "trigger": "Approve",
+            "target": "TokensApproved",
+            "action": "approveTokens"
+          }
+        ]
+      },
+      {
+        "name": "TokensTransferredFrom",
+        "transitions": [
+          {
+            "trigger": "TransferFrom",
+            "target": "TokensTransferredFrom",
+            "action": "transferTokensFrom"
+          }
+        ]
+      },
+      {
+        "name": "TokensApprovedAndCalled",
+        "transitions": [
+          {
+            "trigger": "ApproveAndCall",
+            "target": "TokensApprovedAndCalled",
+            "action": "approveAndCallTokens"
+          }
+        ]
+      },
+      {
+        "name": "NameSet",
+        "transitions": []
+      },
+      {
+        "name": "SymbolSet",
+        "transitions": []
+      },
+      {
+        "name": "TokensTransferredOut",
+        "transitions": []
+      }
+    ],
+    "variables": [
+      {
+        "name": "symbol",
+        "type": "string",
+        "initialValue": "EOS+"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "initialValue": "EOS+"
+      },
+      {
+        "name": "decimals",
+        "type": "uint8",
+        "initialValue": 18
+      },
+      {
+        "name": "_totalSupply",
+        "type": "uint",
+        "initialValue": 1000000000
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "allowed",
+        "type": "mapping(address => mapping(address => uint))",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "transferTokens",
+        "function": "Transfer tokens from sender to recipient."
+      },
+      {
+        "name": "transferTokensBatch",
+        "function": "Transfer tokens to multiple recipients."
+      },
+      {
+        "name": "approveTokens",
+        "function": "Approve a spender to transfer tokens."
+      },
+      {
+        "name": "transferTokensFrom",
+        "function": "Transfer tokens from one account to another."
+      },
+      {
+        "name": "approveAndCallTokens",
+        "function": "Approve a spender and call a fallback function."
+      },
+      {
+        "name": "setTokenName",
+        "function": "Set the token name."
+      },
+      {
+        "name": "setTokenSymbol",
+        "function": "Set the token symbol."
+      },
+      {
+        "name": "transferAnyERC20Tokens",
+        "function": "Transfer out any accidentally sent ERC20 tokens."
+      }
+    ],
+    "events": [
+      "Transfer",
+      "Approval",
+      "ApproveAndCallFallBack"
+    ]
+}

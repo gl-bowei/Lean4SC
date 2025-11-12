@@ -1,0 +1,105 @@
+{
+    "contractName": "CorexToken",
+    "inherited contracts": [],
+    "initialState": "ActiveTrading",
+    "states": [
+      {
+        "name": "ActiveTrading",
+        "transitions": [
+          {
+            "trigger": "TransferRequest",
+            "target": "ActiveTrading",
+            "action": "transfer",
+            "condition": "not frozenAccount[msg.sender]"
+          },
+          {
+            "trigger": "FreezeAccountRequest",
+            "target": "AccountFrozen",
+            "action": "freezeAccount"
+          },
+          {
+            "trigger": "ChangeMintingStateRequest",
+            "target": "MintingControl",
+            "action": "changeMintingState"
+          }
+        ]
+      },
+      {
+        "name": "AccountFrozen",
+        "transitions": [
+          {
+            "trigger": "TransferRequest",
+            "target": "AccountFrozen",
+            "action": "rejectTransfer",
+            "condition": "frozenAccount[msg.sender]"
+          },
+          {
+            "trigger": "UnfreezeAccountRequest",
+            "target": "ActiveTrading",
+            "action": "unfreezeAccount"
+          }
+        ]
+      },
+      {
+        "name": "MintingControl",
+        "transitions": [
+          {
+            "trigger": "MintRequest",
+            "target": "ActiveTrading",
+            "action": "mint",
+            "condition": "canMint"
+          },
+          {
+            "trigger": "ChangeMintingStateRequest",
+            "target": "MintingControl",
+            "action": "changeMintingState"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "sellPrice",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "buyPrice",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "frozenAccount",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      },
+      {
+        "name": "canMint",
+        "type": "bool",
+        "initialValue": false
+      }
+    ],
+    "functions": [
+      {
+        "name": "transfer",
+        "function": "Transfers tokens from sender to the receiver if not frozen."
+      },
+      {
+        "name": "freezeAccount",
+        "function": "Freezes the account preventing transfers."
+      },
+      {
+        "name": "unfreezeAccount",
+        "function": "Lifts freeze on an account allowing transfers."
+      },
+      {
+        "name": "mint",
+        "function": "Mints new tokens if minting is allowed."
+      },
+      {
+        "name": "changeMintingState",
+        "function": "Changes the state of minting permissions."
+      }
+    ],
+    "events": ["FrozenFunds", "Mint", "CanMint"]
+}

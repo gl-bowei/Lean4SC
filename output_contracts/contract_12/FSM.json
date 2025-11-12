@@ -1,0 +1,97 @@
+{
+    "contractName": "TokenSaleContract",
+    "inherited contracts": [],
+    "initialState": "TokenSaleOpen",
+    "states": [
+      {
+        "name": "TokenSaleOpen",
+        "transitions": [
+          {
+            "trigger": "StartSale",
+            "target": "TokenSaleInProgress",
+            "action": "actionStartSale"
+          }
+        ]
+      },
+      {
+        "name": "TokenSaleInProgress",
+        "transitions": [
+          {
+            "trigger": "PurchaseTokens",
+            "target": "TokenSaleInProgress",
+            "action": "actionPurchaseTokens"
+          },
+          {
+            "trigger": "MintToken",
+            "target": "TokenSaleInProgress",
+            "action": "actionMintToken"
+          },
+          {
+            "trigger": "FreezeAccount",
+            "target": "TokenSaleInProgress",
+            "action": "actionFreezeAccount"
+          },
+          {
+            "trigger": "CloseSale",
+            "target": "TokenSaleClosed",
+            "action": "actionCloseSale",
+            "condition": "conditionHardCapReached"
+          }
+        ]
+      },
+      {
+        "name": "TokenSaleClosed",
+        "transitions": [
+          {
+            "trigger": "ClaimFunds",
+            "target": "TokenSaleClosed",
+            "action": "actionClaimFunds"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "tokenSaleHardCap",
+        "type": "uint",
+        "initialValue": 10000
+      },
+      {
+        "name": "baseRate",
+        "type": "uint",
+        "initialValue": 1
+      },
+      {
+        "name": "frozenAccount",
+        "type": "mapping(address => bool)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "actionStartSale",
+        "function": "The function to start the token sale."
+      },
+      {
+        "name": "actionPurchaseTokens",
+        "function": "The function to handle token purchases."
+      },
+      {
+        "name": "actionMintToken",
+        "function": "The function to mint new tokens."
+      },
+      {
+        "name": "actionFreezeAccount",
+        "function": "The function to freeze an account."
+      },
+      {
+        "name": "actionCloseSale",
+        "function": "The function to close the token sale."
+      },
+      {
+        "name": "actionClaimFunds",
+        "function": "The function to claim the collected funds."
+      }
+    ],
+    "events": ["FrozenFunds", "Transfer"]
+}

@@ -1,0 +1,113 @@
+{
+    "contractName": "CompoundFarmingContract",
+    "inherited contracts": [],
+    "initialState": "NormalOperation",
+    "states": [
+      {
+        "name": "NormalOperation",
+        "transitions": [
+          {
+            "trigger": "DepositTriggered",
+            "target": "NormalOperation",
+            "action": "depositTokens",
+            "condition": "userNotInVesting"
+          },
+          {
+            "trigger": "WithdrawTriggered",
+            "target": "NormalOperation",
+            "action": "withdrawTokens",
+            "condition": "userNotInVesting"
+          },
+          {
+            "trigger": "VestingInitiated",
+            "target": "VestingState",
+            "action": "initiateVesting"
+          }
+        ]
+      },
+      {
+        "name": "VestingState",
+        "transitions": [
+          {
+            "trigger": "ClaimRewards",
+            "target": "VestingState",
+            "action": "claimRewards"
+          },
+          {
+            "trigger": "RefundTriggered",
+            "target": "NormalOperation",
+            "action": "refundShares"
+          },
+          {
+            "trigger": "RevertVesting",
+            "target": "NormalOperation",
+            "action": "revertToNormal"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "token",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "cToken",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "pool",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "treasuryWallet",
+        "type": "address",
+        "initialValue": "0x0"
+      },
+      {
+        "name": "communityWallet",
+        "type": "address",
+        "initialValue": "0x0"
+      }
+    ],
+    "functions": [
+      {
+        "name": "depositTokens",
+        "function": "Allows users to deposit tokens into the Compound."
+      },
+      {
+        "name": "withdrawTokens",
+        "function": "Allows users to withdraw tokens when not in vesting."
+      },
+      {
+        "name": "initiateVesting",
+        "function": "Owner can initiate vesting state."
+      },
+      {
+        "name": "claimRewards",
+        "function": "Claim rewards while in vesting state."
+      },
+      {
+        "name": "refundShares",
+        "function": "Allows users to refund their shares in vesting state."
+      },
+      {
+        "name": "revertToNormal",
+        "function": "Reverts contract back to normal operation from vesting."
+      }
+    ],
+    "events": [
+      "DepositTriggered",
+      "WithdrawTriggered",
+      "VestingInitiated",
+      "ClaimRewards",
+      "RefundTriggered",
+      "RevertVesting",
+      "SetTreasuryWallet",
+      "SetCommunityWallet",
+      "SetNetworkFeeTier2"
+    ]
+}

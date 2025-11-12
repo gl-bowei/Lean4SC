@@ -206,143 +206,168 @@ def auctionEnd (ctx : TxContext) (state : SimpleAuctionState) : Except AuctionEr
     returnValue := ()
   }
 
-theorem beneficiary_is_immutable_bid :
-  ∀ (ctx : TxContext) (state : SimpleAuctionState) (out : TransitionOutput Unit),
-  bid ctx state = .ok out → out.newState.beneficiary = state.beneficiary :=
-by
-  intro ctx state out h_bid
-  unfold bid at h_bid
-  -- 简化 'do' 语句
-  simp [bind, pure, Except.bind, Except.pure] at h_bid
+-----------------------------------
+--- 性质证明
+-----------------------------------
 
-  -- 手动处理 'if' 分支
+--- 1.唯一最高出价者胜出
+--- 定理1.1 bid 函数的守卫确保了新的 highestBid 必须严格大于旧的 highestBid。
+theorem bid_increases_bid (ctx : TxContext) (state : SimpleAuctionState) :
+  ∀ (out : TransitionOutput Unit) (h : bid ctx state = .ok out),
+  out.newState.highestBid > state.highestBid :=
+by
+  intro out h
+  unfold bid at h
+  simp [bind, pure, Except.bind, Except.pure] at h
+
   by_cases h_time : (ctx.timestamp > state.auctionEndTime)
-  · -- 情况 1: 时间已过
-    -- (修正 linter 警告: 移除 'if_pos')
-    simp [h_time] at h_bid
-  · -- 情况 2: 时间未过
-    -- (修正 linter 警告: 移除 'if_neg')
-    simp [h_time] at h_bid
+  · simp [h_time] at h;
+  · simp [h_time] at h
 
     by_cases h_val : (ctx.value <= state.highestBid)
-    · -- 情况 2a: 出价不够高
-      -- (修正 linter 警告: 移除 'if_pos')
-      simp [h_val] at h_bid
-    · -- 情况 2b: 出价成功
-      -- (修正 linter 警告: 移除 'if_neg')
-      simp [h_val] at h_bid
+    · simp [h_val] at h;
+    · simp [h_val] at h
 
-      -- 'split' 策略是核心库的一部分, 用来处理 'if state.highestBid != 0'
-      split at h_bid
-      · -- 分支 1: state.highestBid != 0
-        injection h_bid with h_eq
-        -- 修正: 使用 '<-h_eq' (反向重写)
-        rw [<-h_eq]
-      · -- 分支 2: state.highestBid = 0
-        injection h_bid with h_eq
-        -- 修正: 使用 '<-h_eq' (反向重写)
-        rw [<-h_eq]
-        simp
-        rfl
-
-theorem beneficiary_is_immutable_withdraw :
-  ∀ (ctx : TxContext) (state : SimpleAuctionState) (b : Bool),
-  (withdraw ctx state b).newState.beneficiary = state.beneficiary :=
-by
-  intro ctx state b
-  unfold withdraw
-  simp [SimpleAuctionState.updatePendingReturns]
-
-  -- 'split' 策略处理 'if amount > 0'
-  split
-  · -- 分支 1: amount > 0
-    -- 'split' 策略处理 'if !send_succeeds' (即 'if b')
-    -- 注意: 'b' 是 'send_succeeds', 所以 'if !b'
-    split
-    · -- 分支 1a: b = false (send 失败)
-      rfl
-    · -- 分支 1b: b = true (send 成功)
-      rfl
-  · -- 分支 2: amount = 0
-    rfl
-
-theorem successful_bid_increases_highestBid :
-  ∀ (ctx : TxContext) (state : SimpleAuctionState) (out : TransitionOutput Unit),
-  bid ctx state = .ok out → out.newState.highestBid > state.highestBid :=
-by
-  intro ctx state out h_bid
-  unfold bid at h_bid
-  simp [bind, pure, Except.bind, Except.pure] at h_bid
-
-  -- 使用 by_cases
-  by_cases h_time : (ctx.timestamp > state.auctionEndTime)
-  · simp [h_time] at h_bid;
-  · simp [h_time] at h_bid
-
-    by_cases h_val : (ctx.value <= state.highestBid)
-    · simp [h_val] at h_bid;
-    · simp [h_val] at h_bid
-
-      -- 'h_val' 是 '¬(ctx.value <= state.highestBid)'
       have h_gt := Nat.not_le.mp h_val
 
-      -- 使用 'split' 处理 'if state.highestBid != 0'
-      split at h_bid
-      · -- 分支 1: highestBid != 0
-        injection h_bid with h_eq
-        -- 修正: 使用 '<-h_eq'
+      split at h
+      · injection h with h_eq
         rw [<-h_eq]
         exact h_gt
-      · -- 分支 2: highestBid = 0
-        injection h_bid with h_eq
-        -- 修正: 使用 '<-h_eq'
+      · injection h with h_eq
         rw [<-h_eq]
         simp
         exact h_gt
 
-theorem auctionEnd_fails_if_already_ended :
-  ∀ (ctx : TxContext) (state : SimpleAuctionState),
-  (ctx.timestamp >= state.auctionEndTime) → state.ended = true →
-  auctionEnd ctx state = .error .AuctionEndAlreadyCalled :=
+--- 1.2 auctionEnd 成功时，发出的事件 AuctionEnded 包含正确的 highestBidder 和 highestBid
+theorem auctionEnd_reports_correct_winner (ctx : TxContext) (state : SimpleAuctionState) :
+  ∀ (out : TransitionOutput Unit) (h : auctionEnd ctx state = .ok out),
+  out.events = [AuctionEvent.AuctionEnded state.highestBidder state.highestBid] :=
 by
-  intro ctx state h_time_ge h_ended
+  intro out h
+  unfold auctionEnd at h
+  simp [bind, pure, Except.bind, Except.pure] at h
+
+-- 同样, 我们通过 'by_cases' 排除 'throw' 的路径
+  by_cases h_time : ctx.timestamp < state.auctionEndTime
+  . simp [h_time] at h -- 矛盾
+  . simp [h_time] at h
+    by_cases h_ended : state.ended
+    . simp [h_ended] at h -- 矛盾
+    . simp [h_ended] at h -- 成功路径
+
+      -- 'h' 是: .ok { ..., events := [AuctionEvent.AuctionEnded ...], ... } = .ok out
+      rw [←h]
+
+--- 2.最高价款正确支付
+--- 定理2.1 auctionEnd 函数成功时，它产生的 transfers 列表必须精确地包含 (state.beneficiary, state.highestBid)。
+theorem auctionEnd_pays_beneficiary_correctly (ctx : TxContext) (state : SimpleAuctionState) :
+  ∀ (out : TransitionOutput Unit) (h : auctionEnd ctx state = .ok out),
+  out.transfers = [(state.beneficiary, state.highestBid)] ∧ out.newState.ended = true :=
+by
+  intro out h
+  unfold auctionEnd at h
+  simp [bind, pure, Except.bind, Except.pure] at h
+
+  -- 排除 'throw' 路径 (与定理 1.2 相同)
+  by_cases h_time : ctx.timestamp < state.auctionEndTime
+  . simp [h_time] at h
+  . simp [h_time] at h
+    by_cases h_ended : state.ended
+    . simp [h_ended] at h
+    . simp [h_ended] at h
+
+      -- 成功路径
+      rw [←h]
+      simp -- 自动证明 '... = ...' 和 'true = true'
+
+--- 3. 竞拍期限结束：在 auctionEndTime 之前不能结束拍卖；在 auctionEndTime 之后不能出价。
+--- 定理 3.1 (不得提早结束)： 如果 ctx.timestamp < state.auctionEndTime，auctionEnd 调用必须 revert
+theorem auctionEnd_fails_if_early (ctx : TxContext) (state : SimpleAuctionState)
+  (h_time : ctx.timestamp < state.auctionEndTime) :
+  auctionEnd ctx state = .error AuctionError.AuctionNotYetEnded :=
+by
   unfold auctionEnd
-  simp [bind, pure, Except.bind, Except.pure]
+  -- 'simp' 会自动评估 'do' 块
+  -- 它看到 'if ctx.timestamp < state.auctionEndTime' (h_time) 为 true
+  -- 于是它执行 'throw AuctionError.AuctionNotYetEnded'
+  simp [bind, Except.bind, h_time]
 
-  -- 'h_time_ge' (>=) 是 'h_time_lt' (<) 的否定
-  have h_time_not_lt : ¬(ctx.timestamp < state.auctionEndTime) :=
-    Nat.not_lt_of_le h_time_ge
-
-  -- 使用 'h_time_not_lt' 简化第一个 'if' (条件为 false)
-  simp [h_time_not_lt]
-
-  -- 使用 'h_ended' 简化第二个 'if' (条件为 true)
-  simp [h_ended]
-
-theorem successful_withdraw_clears_pendingReturns :
-  ∀ (ctx : TxContext) (state : SimpleAuctionState),
-  -- 前提 1: 用户的待退款 > 0
-  state.pendingReturns ctx.sender > 0 →
-  -- 我们假设 'send' 成功 ('send_succeeds = true')
-  (withdraw ctx state true).newState.pendingReturns ctx.sender = 0 :=
+--- 定理 3.2 (不得迟出价)： 如果 ctx.timestamp > state.auctionEndTime，bid 调用必须 revert
+theorem bid_fails_if_late (ctx : TxContext) (state : SimpleAuctionState)
+  (h_time : ctx.timestamp > state.auctionEndTime) :
+  bid ctx state = .error AuctionError.AuctionAlreadyEnded :=
 by
-  intro ctx state h_amount_gt
+  unfold bid
+  -- 'simp' 评估 'do' 块
+  -- 它看到 'if ctx.timestamp > state.auctionEndTime' (h_time) 为 true
+  -- 于是它执行 'throw AuctionError.AuctionAlreadyEnded'
+  simp [bind, Except.bind, h_time]
+
+--- 4. 资金安全与退款 ：被超越的出价被正确记录为可提现余额 (pendingReturns)，并且 withdraw 函数允许提取该确切金额。
+--- 4.1 正确记录退款 ：一次成功的 bid（且存在先前的 highestBidder）会正确地将旧的 highestBid 添加到旧的 highestBidder 的 pendingReturns 中
+theorem bid_correctly_records_refund
+  (ctx : TxContext)
+  (state : SimpleAuctionState)
+  (h_bid_exists : state.highestBid ≠ 0) :
+  ∀ (out : TransitionOutput Unit), bid ctx state = .ok out →
+    out.newState.pendingReturns state.highestBidder =
+      state.pendingReturns state.highestBidder + state.highestBid :=
+by
+  intro out h
+  unfold bid at h
+  simp [bind, pure, Except.bind, Except.pure] at h
+
+  -- 否定 auctionEndTime 超时的早期返回路径
+  by_cases h_time : ctx.timestamp > state.auctionEndTime
+  · simp [h_time] at h -- 出现 .error，矛盾
+  · simp [h_time] at h
+
+    -- 否定 bid 金额不高的早期返回路径
+    by_cases h_val : ctx.value <= state.highestBid
+    · simp [h_val] at h -- 出现 .error，矛盾
+    · simp [h_val] at h
+
+      -- 我们根据 `state.highestBid = 0` 分情况分析
+      by_cases h_zero : state.highestBid = 0
+      · contradiction -- 与 h_bid_exists: ≠ 0 矛盾
+      · simp [h_zero] at h
+
+        -- 现在我们进入的是 `addPendingReturns` 的 else 分支
+        -- h 形如：.ok (... addPendingReturns state.highestBidder state.highestBid ...)
+        -- 所以我们可以用 `rw` + `simp` 提取出 newState 的 pendingReturns
+
+        rw [← h]
+        simp [SimpleAuctionState.addPendingReturns]
+
+-- 定理 4.2 (正确提取退款)：(已修正声明)
+theorem withdraw_succeeds_and_zeros_balance
+  (ctx : TxContext)
+  (state : SimpleAuctionState)
+  (send_succeeds : Bool) -- <-- 修正 1: 'send_succeeds' 必须作为参数传入
+  (h_amount : state.pendingReturns ctx.sender > 0)
+  (h_send : send_succeeds = true) : -- <-- 修正 2: 'h_send' 现在可以引用 'send_succeeds'
+
+  let out := withdraw ctx state send_succeeds -- <-- 修正 3: 'let' 绑定现在可以找到 'send_succeeds'
+  out.returnValue = true ∧
+  out.newState.pendingReturns ctx.sender = 0 ∧
+  out.attemptedTransfer = some (ctx.sender, state.pendingReturns ctx.sender)
+:=
+by
+  -- 您的 'by' 块是正确的, 无需更改
   unfold withdraw
-
-  -- 'let amount := ...'
-  -- 'if amount > 0 then ...'
-  -- 'if_pos' 使用 'h_amount_gt' 证明第一个 'if' 为 true
-  simp [if_pos h_amount_gt]
-
-  -- 'let state_after_zeroing := ...'
-  -- 'if !true then ... else ...'
-  -- 'simp' 自动处理 '!true' 为 'false', 'if false ...'
-
-
-  -- 目标变为 'state_after_zeroing.pendingReturns ctx.sender = 0'
-  -- 展开 'state_after_zeroing' 的定义
+  simp [h_amount, h_send]
   unfold SimpleAuctionState.updatePendingReturns
-
-  -- 'pendingReturns' 的定义是 'fun a => if a == ctx.sender then 0 else ...'
-  -- 当用 'ctx.sender' 调用它时, 'if' 条件为 true ('ctx.sender == ctx.sender')
   simp
+
+--- Lean 定理 5 (重入无效)： 我们可以证明，如果一个用户的 pendingReturns 已经是 0（就像在重入调用中那样），withdraw 函数不会执行任何状态更改，也不会尝试任何转账
+theorem withdraw_is_safe_against_reentrancy (ctx : TxContext) (state : SimpleAuctionState) (send_succeeds : Bool)
+  (h_amount_zero : state.pendingReturns ctx.sender = 0) :
+  let out := withdraw ctx state send_succeeds
+  out.returnValue = true ∧
+  out.attemptedTransfer = none ∧
+  out.newState = state :=
+by
+  -- 'h_amount_zero' 意味着 'let amount := 0'
+  unfold withdraw
+  simp [h_amount_zero]

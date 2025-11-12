@@ -1,0 +1,91 @@
+{
+    "contractName": "AdamEthSettlement",
+    "inherited contracts": ["AccessControl", "ReentrancyGuard"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "settle",
+                    "target": "Settled",
+                    "action": "processSettlement",
+                    "condition": "validSettlementConditions"
+                }
+            ]
+        },
+        {
+            "name": "Settled",
+            "transitions": [
+                {
+                    "trigger": "withdrawERC20",
+                    "target": "Withdrawn",
+                    "action": "processWithdrawERC20"
+                },
+                {
+                    "trigger": "changeOperator",
+                    "target": "OperatorChanged",
+                    "action": "updateOperator"
+                },
+                {
+                    "trigger": "changeAdamWallet",
+                    "target": "WalletChanged",
+                    "action": "updateAdamWallet"
+                }
+            ]
+        },
+        {
+            "name": "Withdrawn",
+            "transitions": []
+        },
+        {
+            "name": "OperatorChanged",
+            "transitions": []
+        },
+        {
+            "name": "WalletChanged",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "exclusives",
+            "type": "mapping(uint256 => bool)",
+            "initialValue": {}
+        },
+        {
+            "name": "operator",
+            "type": "address",
+            "initialValue": "0x0"
+        },
+        {
+            "name": "adamWallet",
+            "type": "address payable",
+            "initialValue": "0x0"
+        }
+    ],
+    "functions": [
+        {
+            "name": "processSettlement",
+            "function": "Handles the settlement process including payment distribution."
+        },
+        {
+            "name": "processWithdrawERC20",
+            "function": "Handles the withdrawal of ERC20 tokens."
+        },
+        {
+            "name": "updateOperator",
+            "function": "Updates the operator address."
+        },
+        {
+            "name": "updateAdamWallet",
+            "function": "Updates the Adam wallet address."
+        }
+    ],
+    "events": [
+        "Settled",
+        "ERC20Withdrawed",
+        "OperatorChanged",
+        "AdamWalletChanged"
+    ]
+}

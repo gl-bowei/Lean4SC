@@ -1,0 +1,99 @@
+{
+    "contractName": "MarketplaceContract",
+    "inherited contracts": [],
+    "initialState": "NFT Offered for Sale",
+    "states": [
+      {
+        "name": "NFT Offered for Sale",
+        "transitions": [
+          {
+            "trigger": "OfferNFT",
+            "target": "NFT Sold",
+            "action": "offerForSale",
+            "condition": "nftAvailable"
+          },
+          {
+            "trigger": "EnterBid",
+            "target": "Bid Entered",
+            "action": "enterBid"
+          }
+        ]
+      },
+      {
+        "name": "NFT Sold",
+        "transitions": [
+          {
+            "trigger": "BuyNFT",
+            "target": "NFT Offered for Sale",
+            "action": "buy",
+            "condition": "sufficientFunds"
+          },
+          {
+            "trigger": "WithdrawFunds",
+            "target": "NFT Offered for Sale",
+            "action": "withdraw"
+          }
+        ]
+      },
+      {
+        "name": "Bid Entered",
+        "transitions": [
+          {
+            "trigger": "AcceptBid",
+            "target": "NFT Sold",
+            "action": "acceptBid"
+          },
+          {
+            "trigger": "RemoveBid",
+            "target": "NFT Offered for Sale",
+            "action": "withdraw"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "platformFee",
+        "type": "uint",
+        "initialValue": 5
+      },
+      {
+        "name": "maxTokens",
+        "type": "uint",
+        "initialValue": 100
+      },
+      {
+        "name": "saleOffers",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "bids",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      }
+    ],
+    "functions": [
+      {
+        "name": "offerForSale",
+        "function": "The function to offer an NFT for sale."
+      },
+      {
+        "name": "buy",
+        "function": "The function to buy an NFT."
+      },
+      {
+        "name": "enterBid",
+        "function": "The function to enter a bid on an NFT."
+      },
+      {
+        "name": "acceptBid",
+        "function": "The function to accept a bid on an NFT."
+      },
+      {
+        "name": "withdraw",
+        "function": "The function to withdraw funds or bids."
+      }
+    ],
+    "events": ["Offered", "BidEntered", "Bought", "RemovedFromSale"]
+}

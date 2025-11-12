@@ -1,0 +1,95 @@
+{
+    "contractName": "VapenApes",
+    "inherited contracts": [],
+    "initialState": "PresaleInactive",
+    "states": [
+      {
+        "name": "PresaleInactive",
+        "transitions": [
+          {
+            "trigger": "ActivatePresale",
+            "target": "PresaleActive",
+            "action": "flipSaleState"
+          }
+        ]
+      },
+      {
+        "name": "PresaleActive",
+        "transitions": [
+          {
+            "trigger": "PresaleMint",
+            "target": "PresaleActive",
+            "action": "presaleMintApe",
+            "condition": "PRESALE_ACTIVE && PRESALE_PURCHASES < MAX_APES"
+          },
+          {
+            "trigger": "EndPresale",
+            "target": "SaleInactive",
+            "action": "flipSaleState"
+          }
+        ]
+      },
+      {
+        "name": "SaleInactive",
+        "transitions": [
+          {
+            "trigger": "ActivateSale",
+            "target": "SaleActive",
+            "action": "flipSaleState"
+          }
+        ]
+      },
+      {
+        "name": "SaleActive",
+        "transitions": [
+          {
+            "trigger": "MintApe",
+            "target": "SaleActive",
+            "action": "mintApe",
+            "condition": "SALE_ACTIVE"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "SALE_ACTIVE",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "PRESALE_ACTIVE",
+        "type": "bool",
+        "initialValue": false
+      },
+      {
+        "name": "MAX_APES",
+        "type": "uint",
+        "initialValue": 1000
+      },
+      {
+        "name": "PRESALE_PURCHASES",
+        "type": "uint",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "mintApe",
+        "function": "Mints an Ape during the public sale."
+      },
+      {
+        "name": "presaleMintApe",
+        "function": "Mints an Ape during the presale."
+      },
+      {
+        "name": "flipSaleState",
+        "function": "Toggles the sale state."
+      },
+      {
+        "name": "reserveApes",
+        "function": "Reserves a certain number of Apes."
+      }
+    ],
+    "events": ["MintApe"]
+}

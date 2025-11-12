@@ -1,0 +1,107 @@
+{
+    "contractName": "KikiInuToken",
+    "inherited contracts": ["ERC20", "Ownable"],
+    "initialState": "PreLiquiditySetup",
+    "states": [
+      {
+        "name": "PreLiquiditySetup",
+        "transitions": [
+          {
+            "trigger": "LiquiditySetupCompleted",
+            "target": "ActiveTrading",
+            "action": "enableTradingFeatures",
+            "condition": "isOwner"
+          }
+        ]
+      },
+      {
+        "name": "ActiveTrading",
+        "transitions": [
+          {
+            "trigger": "Transfer",
+            "target": "ActiveTrading",
+            "action": "tokenTransfer",
+            "condition": "validTransfer"
+          },
+          {
+            "trigger": "Approve",
+            "target": "ActiveTrading",
+            "action": "setAllowance",
+            "condition": "validApproval"
+          },
+          {
+            "trigger": "SetTaxes",
+            "target": "ActiveTrading",
+            "action": "updateFeeStructure",
+            "condition": "isOwner"
+          },
+          {
+            "trigger": "SwapLiquidity",
+            "target": "ActiveTrading",
+            "action": "executeSwapAndLiquify",
+            "condition": "liquidityThresholdMet"
+          },
+          {
+            "trigger": "SniperAttemptDetected",
+            "target": "ActiveTrading",
+            "action": "takeAntiSnipingMeasures",
+            "condition": "sniperProtectionActive"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "owner",
+        "type": "address",
+        "initialValue": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "balances",
+        "type": "mapping(address => uint256)",
+        "initialValue": {}
+      },
+      {
+        "name": "allowances",
+        "type": "mapping(address => mapping(address => uint256))",
+        "initialValue": {}
+      },
+      {
+        "name": "feeStructure",
+        "type": "uint256",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "enableTradingFeatures",
+        "function": "Activates trading features after liquidity setup is done."
+      },
+      {
+        "name": "tokenTransfer",
+        "function": "Handles the transfer of tokens between accounts."
+      },
+      {
+        "name": "setAllowance",
+        "function": "Sets the allowance for a spender to withdraw from the owner's account."
+      },
+      {
+        "name": "updateFeeStructure",
+        "function": "Updates the transaction fee structure for the token."
+      },
+      {
+        "name": "executeSwapAndLiquify",
+        "function": "Executes the swap and liquidity addition process."
+      },
+      {
+        "name": "takeAntiSnipingMeasures",
+        "function": "Implements protections against sniping during liquidity addition."
+      }
+    ],
+    "events": [
+      "OwnershipTransferred",
+      "MinTokensBeforeSwapUpdated",
+      "SwapAndLiquify",
+      "SniperCaught"
+    ]
+}

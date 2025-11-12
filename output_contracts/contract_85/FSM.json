@@ -1,0 +1,97 @@
+{
+    "contractName": "WhiteBetting",
+    "inherited contracts": [],
+    "initialState": "GameInitialized",
+    "states": [
+        {
+            "name": "GameInitialized",
+            "transitions": [
+                {
+                    "trigger": "SetGameInfo",
+                    "target": "GameOpen",
+                    "action": "setGameInfo"
+                }
+            ]
+        },
+        {
+            "name": "GameOpen",
+            "transitions": [
+                {
+                    "trigger": "PlaceBet",
+                    "target": "BetPlaced",
+                    "action": "placeBet",
+                    "condition": "gameList[_fixtureId].open_status == 3"
+                },
+                {
+                    "trigger": "ChangeOdd",
+                    "target": "GameOpen",
+                    "action": "changeOdd"
+                },
+                {
+                    "trigger": "GivePrizeMoney",
+                    "target": "GameClosed",
+                    "action": "givePrizeMoney",
+                    "condition": "gameList[_fixtureId].isDone == false"
+                }
+            ]
+        },
+        {
+            "name": "BetPlaced",
+            "transitions": [
+                {
+                    "trigger": "GivePrizeMoney",
+                    "target": "GameClosed",
+                    "action": "givePrizeMoney"
+                }
+            ]
+        },
+        {
+            "name": "GameClosed",
+            "transitions": []
+        }
+    ],
+    "variables": [
+        {
+            "name": "owner",
+            "type": "address payable",
+            "initialValue": "msg.sender"
+        },
+        {
+            "name": "gameList",
+            "type": "mapping(uint64 => GameInfo)",
+            "initialValue": {}
+        },
+        {
+            "name": "betList",
+            "type": "mapping(uint64 => BetFixture[])",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "setGameInfo",
+            "function": "Save the game information."
+        },
+        {
+            "name": "placeBet",
+            "function": "Player makes a bet."
+        },
+        {
+            "name": "givePrizeMoney",
+            "function": "Give prize money by the game result."
+        },
+        {
+            "name": "changeOdd",
+            "function": "Refresh the game odd."
+        }
+    ],
+    "events": [
+        "Success",
+        "Deposit",
+        "Withdraw",
+        "NewStake",
+        "SetGame",
+        "ChangeOdd",
+        "GivePrizeMoney"
+    ]
+}

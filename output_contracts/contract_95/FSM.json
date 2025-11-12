@@ -1,0 +1,96 @@
+{
+    "contractName": "OtoroToken",
+    "inherited contracts": ["ERC20", "Ownable"],
+    "initialState": "Initial",
+    "states": [
+        {
+            "name": "Initial",
+            "transitions": [
+                {
+                    "trigger": "mint",
+                    "target": "Minted",
+                    "action": "minting tokens to the specified address",
+                    "condition": "onlyOwner"
+                }
+            ]
+        },
+        {
+            "name": "Minted",
+            "transitions": [
+                {
+                    "trigger": "delegate",
+                    "target": "Delegated",
+                    "action": "delegating votes to a delegatee"
+                },
+                {
+                    "trigger": "delegateBySig",
+                    "target": "Delegated",
+                    "action": "delegating votes using a signature"
+                }
+            ]
+        },
+        {
+            "name": "Delegated",
+            "transitions": [
+                {
+                    "trigger": "getCurrentVotes",
+                    "target": "Delegated",
+                    "action": "getting the current votes balance"
+                },
+                {
+                    "trigger": "getPriorVotes",
+                    "target": "Delegated",
+                    "action": "determining prior votes for an account"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "_delegates",
+            "type": "mapping(address => address)",
+            "initialValue": {}
+        },
+        {
+            "name": "checkpoints",
+            "type": "mapping(address => mapping(uint32 => Checkpoint))",
+            "initialValue": {}
+        },
+        {
+            "name": "numCheckpoints",
+            "type": "mapping(address => uint32)",
+            "initialValue": {}
+        },
+        {
+            "name": "nonces",
+            "type": "mapping(address => uint)",
+            "initialValue": {}
+        }
+    ],
+    "functions": [
+        {
+            "name": "mint",
+            "function": "Creates `_amount` token to `_to`. Must only be called by the owner."
+        },
+        {
+            "name": "delegate",
+            "function": "Delegate votes from `msg.sender` to `delegatee`."
+        },
+        {
+            "name": "delegateBySig",
+            "function": "Delegates votes from signatory to `delegatee` using signature."
+        },
+        {
+            "name": "getCurrentVotes",
+            "function": "Gets the current votes balance for `account`."
+        },
+        {
+            "name": "getPriorVotes",
+            "function": "Determine the prior number of votes for an account as of a block number."
+        }
+    ],
+    "events": [
+        "DelegateChanged",
+        "DelegateVotesChanged"
+    ]
+}

@@ -1,0 +1,99 @@
+{
+    "contractName": "OnChainBotsNFT",
+    "inherited contracts": [],
+    "initialState": "SaleInactive",
+    "states": [
+      {
+        "name": "SaleInactive",
+        "transitions": [
+          {
+            "trigger": "OwnerActivatesSale",
+            "target": "SaleActive",
+            "action": "flipSaleState"
+          }
+        ]
+      },
+      {
+        "name": "SaleActive",
+        "transitions": [
+          {
+            "trigger": "UserClaimsNFT",
+            "target": "Minting",
+            "action": "claim",
+            "condition": "numClaimed < maxSupply && saleIsActive"
+          },
+          {
+            "trigger": "OwnerDeactivatesSale",
+            "target": "SaleInactive",
+            "action": "flipSaleState"
+          }
+        ]
+      },
+      {
+        "name": "Minting",
+        "transitions": [
+          {
+            "trigger": "UserClaiming",
+            "target": "SaleActive",
+            "action": "claim",
+            "condition": "numClaimed < maxSupply && saleIsActive"
+          },
+          {
+            "trigger": "OwnerMintsSpecialNFT",
+            "target": "SaleActive",
+            "action": "ownerClaim"
+          },
+          {
+            "trigger": "OwnerWithdrawsFunds",
+            "target": "SaleActive",
+            "action": "withdraw"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "maxSupply",
+        "type": "uint",
+        "initialValue": 10000
+      },
+      {
+        "name": "numClaimed",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "mintPrice",
+        "type": "uint",
+        "initialValue": 0.05
+      },
+      {
+        "name": "saleIsActive",
+        "type": "bool",
+        "initialValue": false
+      }
+    ],
+    "functions": [
+      {
+        "name": "claim",
+        "function": "Allows users to claim NFTs by sending Ether."
+      },
+      {
+        "name": "flipSaleState",
+        "function": "Toggles the sale state between active and inactive."
+      },
+      {
+        "name": "ownerClaim",
+        "function": "Allows the owner to mint special NFTs."
+      },
+      {
+        "name": "setMintPrice",
+        "function": "Sets the price for minting NFTs."
+      },
+      {
+        "name": "withdraw",
+        "function": "Allows the owner to withdraw funds from the contract."
+      }
+    ],
+    "events": ["PaymentReleased"]
+}

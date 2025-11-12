@@ -1,0 +1,105 @@
+{
+    "contractName": "NFTStacking",
+    "inherited contracts": [],
+    "initialState": "Idle",
+    "states": [
+        {
+            "name": "Idle",
+            "transitions": [
+                {
+                    "trigger": "StakeNFT",
+                    "target": "Staked",
+                    "action": "stakeNFT",
+                    "condition": "NFT ownership verified, not already staked"
+                },
+                {
+                    "trigger": "UnstakeNFT",
+                    "target": "Unstaked",
+                    "action": "unStakeNFT",
+                    "condition": "NFT ownership verified, must be staked"
+                },
+                {
+                    "trigger": "ClaimReward",
+                    "target": "RewardClaimed",
+                    "action": "claimReward",
+                    "condition": "NFT ownership verified, must be staked"
+                }
+            ]
+        },
+        {
+            "name": "Staked",
+            "transitions": [
+                {
+                    "trigger": "UnstakeNFT",
+                    "target": "Idle",
+                    "action": "unStakeNFT"
+                },
+                {
+                    "trigger": "ClaimReward",
+                    "target": "RewardClaimed",
+                    "action": "claimReward",
+                    "condition": "Minimum staking time passed"
+                }
+            ]
+        },
+        {
+            "name": "Unstaked",
+            "transitions": [
+                {
+                    "trigger": "StakeNFT",
+                    "target": "Staked",
+                    "action": "stakeNFT",
+                    "condition": "NFT ownership verified, not already staked"
+                }
+            ]
+        },
+        {
+            "name": "RewardClaimed",
+            "transitions": [
+                {
+                    "trigger": "StakeNFT",
+                    "target": "Staked",
+                    "action": "stakeNFT",
+                    "condition": "NFT ownership verified, not already staked"
+                }
+            ]
+        }
+    ],
+    "variables": [
+        {
+            "name": "tokenRewardInOneHour",
+            "type": "uint256",
+            "initialValue": 1000000000000000
+        },
+        {
+            "name": "mimumTimeForUnstake",
+            "type": "uint256",
+            "initialValue": 1209600
+        },
+        {
+            "name": "totalStakedNFTs",
+            "type": "uint256",
+            "initialValue": 0
+        },
+        {
+            "name": "admin",
+            "type": "address",
+            "initialValue": ""
+        }
+    ],
+    "functions": [
+        {
+            "name": "stakeNFT",
+            "function": "Stake a single NFT, checking ownership and staked status."
+        },
+        {
+            "name": "unStakeNFT",
+            "function": "Unstake a single NFT, checking ownership and staked status."
+        },
+        {
+            "name": "claimReward",
+            "function": "Claim rewards for a staked NFT after minimum staking time."
+        }
+    ],
+    "events": ["nftStakedEvent", "nftUnStakedEvent"]
+}

@@ -1,0 +1,107 @@
+{
+    "contractName": "NFTMintingContract",
+    "inherited contracts": [],
+    "initialState": "NotActive",
+    "states": [
+      {
+        "name": "NotActive",
+        "transitions": [
+          {
+            "trigger": "ActivatePreSale",
+            "target": "PreSaleActive",
+            "action": "flipPreSaleState"
+          },
+          {
+            "trigger": "ActivatePublicSale",
+            "target": "PublicSaleActive",
+            "action": "flipPublicSaleState"
+          }
+        ]
+      },
+      {
+        "name": "PreSaleActive",
+        "transitions": [
+          {
+            "trigger": "MintNFT",
+            "target": "PreSaleActive",
+            "action": "PreSuperballMintImps",
+            "condition": "EligibleForPreSale"
+          },
+          {
+            "trigger": "EndPreSale",
+            "target": "NotActive",
+            "action": "EndPreSaleAction"
+          }
+        ]
+      },
+      {
+        "name": "PublicSaleActive",
+        "transitions": [
+          {
+            "trigger": "MintNFT",
+            "target": "PublicSaleActive",
+            "action": "PublicMintImps",
+            "condition": "EligibleForPublicSale"
+          },
+          {
+            "trigger": "EndPublicSale",
+            "target": "NotActive",
+            "action": "EndPublicSaleAction"
+          }
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "maxImps",
+        "type": "uint",
+        "initialValue": 10000
+      },
+      {
+        "name": "MintedWallets",
+        "type": "mapping(address => uint)",
+        "initialValue": {}
+      },
+      {
+        "name": "SuperballPresaleMinted",
+        "type": "uint",
+        "initialValue": 0
+      },
+      {
+        "name": "FloatingHeadClaimed",
+        "type": "uint",
+        "initialValue": 0
+      }
+    ],
+    "functions": [
+      {
+        "name": "flipPreSaleState",
+        "function": "Toggle the pre-sale state."
+      },
+      {
+        "name": "flipPublicSaleState",
+        "function": "Toggle the public sale state."
+      },
+      {
+        "name": "PublicMintImps",
+        "function": "Mint NFTs during the public sale."
+      },
+      {
+        "name": "PreSuperballMintImps",
+        "function": "Mint NFTs for Superball owners during pre-sale."
+      },
+      {
+        "name": "PreFloatingHeadMintImps",
+        "function": "Claim NFTs for Floating Head owners during pre-sale."
+      },
+      {
+        "name": "withdraw",
+        "function": "Withdraw funds from the contract."
+      }
+    ],
+    "events": [
+      "NFTMinted",
+      "SaleStateChanged",
+      "GiveawayExecuted"
+    ]
+}
