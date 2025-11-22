@@ -2,7 +2,6 @@ import Init.Data.Nat.Basic
 import Init.Data.Nat.Lemmas
 
 -- ======== 1. 基础定义 ========
-
 structure Address where
   val : String
 deriving DecidableEq, Inhabited, Repr
